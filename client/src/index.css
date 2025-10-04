@@ -5,8 +5,6 @@
   font-size: var(--font-size);
   color: var(--brand-color-texto-gris);
 
-  background: linear-gradient(290deg, #F5E6D3 0%, #FFFFFF 50%, #F5E6D3 100%);
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -50,18 +48,31 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+    font-family: var(--font-serif);
+    color: black;
+    font-size: 52px;
+    font-style: normal;
+    /* Esto es lo correcto */
+    font-weight: 400;
+    /* Opcional: peso regular */
+}
+
+h2 {
+    font-family: var(--font-sans);
+    color: var(--brand-verde-salvia);
+    font-size: 12px;
+    font-style: light;
 }
 
 button {
+  background-color: #fff;
+  color: var(--brand-siena-tostado);
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid var(--brand-siena-tostado);
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }

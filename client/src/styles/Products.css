@@ -1,0 +1,111 @@
+:root {
+    --brand-siena-tostado: #A0522D;
+    --brand-verde-salvia: #87A96B;
+    --brand-rosa-polvoriento: #C47A6D;
+    --brand-color-texto-gris: #6B6B6B;
+    --font-sans: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+    --font-serif: 'Playfair Display', serif;
+}
+
+main {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.titulo-product{
+  padding: 50px;
+  text-align: center;
+  margin: 30px;
+}
+
+.negro { color: black; }
+.marron { color: var(--brand-siena-tostado); }
+
+.buscar-product{
+  background-color: white;
+  border-radius: 10px;
+  border: #a0512d7e 1px solid;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 12px;
+  margin: 0 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.buscador{
+  padding: 5px;
+  background-color: #a0512d9f;
+  width: 400px;
+  border-radius: 10px;
+  margin: 10px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.buscador input::placeholder{ color: #000; }
+.buscador input{
+  font-family: var(--font-sans);
+  flex: 1;
+  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
+  outline: none;
+  background-color: transparent;
+}
+
+.buscador button{ background: transparent; border: none; cursor: pointer; padding: 0 5px; }
+
+.coleccion1{ margin: 9px; display: flex; gap: 1rem; padding: 2px; flex-wrap: wrap; }
+
+.btn-coleccion{ padding: 8px 10px; background: #fff; color: var(--brand-siena-tostado); border: 1px solid var(--brand-siena-tostado); border-radius: 6px; font-size: 15px; font-family: var(--font-sans); font-weight: 500; cursor: pointer; transition: background 0.2s, color 0.2s, border 0.2s; box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+.btn-coleccion:hover{ background: var(--brand-siena-tostado); color: #fff; border-color: var(--brand-siena-tostado); }
+
+.placas-container1{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 40px auto;
+  max-width: 1200px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.placa{
+  background: #ffffff7e;
+  border-radius: 10px;
+  border: 1px solid #a0512d7e;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+}
+
+.placa img{ max-width: 100%; border-radius: 12px; object-fit: cover; margin-bottom: 12px; }
+.placa h2{ font-size: 18px; color: black; font-weight: 600; margin: 8px 0 4px 0; }
+.placa h3{ font-size: 20px; color: var(--brand-siena-tostado); margin: 4px 0; }
+.placa .descripcion{ font-size: 14px; color: #444; margin-bottom: 6px; }
+
+.placa a.btn-carrito{ margin: 6px 0; padding: 8px 12px; background-color: var(--brand-rosa-polvoriento) !important; color: #fff !important; border: none !important; border-radius: 5px; font-size: 14px; cursor: pointer; width: 100%; text-align: center; display: inline-block; transition: background 0.2s; }
+.placa a.btn-carrito:hover{ background-color: var(--brand-verde-salvia) !important; }
+
+.placa .btn-coleccion.producto{ margin: 6px 0; padding: 8px 12px; background: var(--brand-siena-tostado); color: #fff; border: none; border-radius: 5px; font-size: 14px; cursor: pointer; width: 100%; text-align: center; transition: background 0.2s; }
+.placa .btn-coleccion.producto:hover{ background: var(--brand-rosa-polvoriento); }
+
+.coleccion{ display:flex; justify-content:center; align-items:center; height: 16rem; }
+
+@media (max-width: 900px){
+  .placas-container1{ grid-template-columns: 1fr; max-width: 500px; padding: 8px; }
+  .buscar-product{ flex-direction: column; align-items: stretch; }
+  .buscador{ width: 100%; }
+}
+
+@media (max-width: 600px){
+  .titulo-product{ padding: 20px 12px; }
+  .placa{ padding: 16px; }
+}
