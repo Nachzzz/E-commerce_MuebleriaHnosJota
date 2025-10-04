@@ -14,7 +14,7 @@ const FeaturedProducts = () => {
         const data = await res.json();
         setProducts(data.slice(0, 4));
       } catch (err) {
-        // fallback to local json
+        // Llamada de respaldo al archivo JSON local. Se usaba antes para pruebas
         try {
           const res2 = await fetch('/data/productos.json');
           const data2 = await res2.json();
