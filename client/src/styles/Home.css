@@ -1,0 +1,277 @@
+:root {
+    --font-size: 12pt;
+    --line-height-body: 1.6;
+    --font-serif: 'Playfair Display', serif;
+    --font-sans: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+
+    --brand-siena-tostado: #A0522D;
+    --brand-verde-salvia: #87A96B;
+    --brand-alabastro-calido: #F5E6D3;
+    --brand-vara-de-oro: #D4A437;
+    --brand-rosa-polvoriento: #C47A6D;
+    --brand-color-texto-gris: #6B6B6B;
+}
+
+body {
+    font-family: var(--font-sans);
+}
+
+.placas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    margin-top: 32px;
+}
+
+.placa {
+    background: #ffffff7e;
+    border-radius: 10px;
+    border: #a0512d7e 1px solid;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 170px;
+    height: auto;
+    font-size: 12px;
+}
+
+.placa h2 {
+    font-size: 15px;
+    color: black;
+    font-style: normal;
+    /* Esto es lo correcto */
+    font-weight: 400;
+    /* Opcional: peso regular */
+}
+
+.placa img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.placa button,
+.placa a.btn-coleccion.producto {
+    margin-top: 12px;
+    padding: 8px 18px;
+    background: var(--brand-siena-tostado);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.info_productos {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.coleccion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 16rem;
+}
+
+.btn-coleccion.especial {
+    padding: 30px 40px;
+}
+
+/* placas info */
+.placas-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1rem;
+}
+
+.placas-info h1 {
+    font-size: 15px;
+    color: black;
+    font-style: normal;
+    /* Esto es lo correcto */
+    font-weight: 400;
+    /* Opcional: peso regular */
+}
+
+.placas-info p {
+    font-family: var(--font-sans);
+    text-align: center;
+}
+
+.placa1 {
+    background: white;
+    border-radius: 10px;
+    border: #a0512d7e 1px solid;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.placa1 .circle,
+.placa1 .circle2,
+.placa1 .circle3 {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.placa1 .circle {
+    background: var(--brand-verde-salvia);
+}
+
+.placa1 .circle2 {
+    background: var(--brand-vara-de-oro);
+}
+
+.placa1 .circle3 {
+    background: var(--brand-rosa-polvoriento);
+}
+
+.valores-marca {
+    padding-bottom: 5pc;
+}
+
+.footer {
+    width: 100%;
+    background-color: #33180B;
+}
+
+.footer-content {
+    color: #D1D5DC;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px;
+    margin-top: 32px;
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.icon-footer {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.footer-content .logo,
+.footer-content .enlaces,
+.footer-content .contacto,
+.footer-content .horarios {
+    flex: 1 1 180px;
+    margin-bottom: 24px;
+    min-width: 180px;
+}
+
+.footer-bottom {
+    width: 100%;
+    border-top: 1px solid #D1D5DC;
+    margin-top: 32px;
+    padding-top: 18px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-bottom p {
+    color: #D1D5DC;
+    font-size: 14px;
+    margin: 0;
+    text-align: left;
+}
+
+@media (max-width: 900px) {
+
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        max-width: 100%;
+        left: 0;
+        transform: none;
+    }
+
+    .footer-content .logo,
+    .footer-content .enlaces,
+    .footer-content .contacto,
+    .footer-content .horarios {
+        min-width: 0;
+        width: 100%;
+        margin-bottom: 18px;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 24px;
+        padding-top: 12px;
+        gap: 8px;
+    }
+
+    .footer-bottom p {
+        text-align: center;
+    }
+
+    .placas-container,
+    .placas-container1 {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 24px !important;
+        align-items: center !important;
+        width: 100% !important;
+        max-width: 500px !important;
+        margin: 0 auto !important;
+        padding: 0 8px !important;
+    }
+
+    .placa {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 350px !important;
+        margin: 0 auto !important;
+        padding: 24px !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+        align-items: center !important;
+    }
+
+    .placa img {
+        width: 100% !important;
+        height: auto !important;
+        margin-bottom: 12px !important;
+    }
+
+    .placas-info {
+        flex-direction: column;
+        gap: 2rem;
+    }
+}
