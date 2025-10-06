@@ -11,8 +11,6 @@ import { CartProvider } from './context/CartContext'
 import './App.css'
 
 function App() {
-  const [carrito, setCarrito] = useState([]);
-  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
   return (
     <BrowserRouter>
@@ -35,8 +33,7 @@ function App() {
   )
 }
 
-export default App;
+export default App
 
-
-
-
+//para arreglar cambios
+//Cambios para que funcione
