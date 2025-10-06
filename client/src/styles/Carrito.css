@@ -1,8 +1,10 @@
 .carrito {
     max-width: 1100px;
     margin: 32px auto;
-    display: grid;
-    grid-template-columns: 2fr 1fr;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 24px;
     padding: 16px;
 }

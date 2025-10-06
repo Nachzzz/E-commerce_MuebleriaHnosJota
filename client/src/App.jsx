@@ -8,27 +8,31 @@ import Nosotros from './pages/Nosotros'
 import Contacto from './pages/Contacto'
 import Carrito from './pages/Carrito'
 import { CartProvider } from './context/CartContext'
+import { NotificationProvider } from './context/NotificationContext'
+import './styles/toasts.css'
 import './App.css'
 
 function App() {
 
   return (
     <BrowserRouter>
-      <CartProvider>
-        <div className='layout'>
-          <NavBar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="/nosotros" element={<Nosotros />} />
-            <Route path="/productos" element={<Products />} />
-            <Route path="/producto/:id" element={<ProductDetail />} />
-            <Route path="/carrito" element={<Carrito />} />
-            <Route path="*" element={<Home />} />
-          </Routes>
-        </div>
-        <Footer />
-      </CartProvider>
+      <NotificationProvider>
+        <CartProvider>
+          <div className='layout'>
+            <NavBar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/contacto" element={<Contacto />} />
+              <Route path="/nosotros" element={<Nosotros />} />
+              <Route path="/productos" element={<Products />} />
+              <Route path="/producto/:id" element={<ProductDetail />} />
+              <Route path="/carrito" element={<Carrito />} />
+              <Route path="*" element={<Home />} />
+            </Routes>
+          </div>
+          <Footer />
+        </CartProvider>
+      </NotificationProvider>
     </BrowserRouter>
   )
 }

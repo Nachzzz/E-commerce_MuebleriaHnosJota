@@ -18,7 +18,7 @@ export default function Carrito() {
 
   return (
     <main className="carrito">
-      <h2>Tu carrito</h2>
+      <h1>Tu carrito</h1>
       <div className="carrito-list">
         {cartItems.map(item => (
           <div className="carrito-item" key={item.id}>
