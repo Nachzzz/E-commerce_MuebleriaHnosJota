@@ -21,7 +21,7 @@ const Products = () => {
         let data;
         try {
           data = await tryFetch('/api/productos');
-        } catch (err) {
+        } catch {
           // fallback to explicit backend host
           data = await tryFetch('http://localhost:4000/api/productos');
         }
