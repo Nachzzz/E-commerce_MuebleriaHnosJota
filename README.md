@@ -15,9 +15,6 @@ El objetivo es una aplicación cliente-servidor mínima que permita listar produ
   - [Frontend (Vite + React)](#frontend-vite--react)
   - [Flujo recomendado de desarrollo](#flujo-recomendado-de-desarrollo)
 - [API (endpoints)](#api-endpoints)
-- [Detalles técnicos y decisiones](#detalles-técnicos-y-decisiones)
-- [Solución de problemas](#solución-de-problemas)
-- [Buenas prácticas y siguientes pasos sugeridos](#buenas-prácticas-y-siguientes-pasos-sugeridos)
 - [Créditos y licencias](#créditos-y-licencias)
 
 ---
