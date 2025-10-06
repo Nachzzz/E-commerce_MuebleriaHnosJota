@@ -1,7 +1,7 @@
 import "../styles/NavBar.css";
 import { useState } from "react";
 import { Link, useNavigate } from 'react-router-dom'
-import carritoIcon from '../assets/carrito.svg'
+import carritoIcon from '/carrito.svg'
 
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
