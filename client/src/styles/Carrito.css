@@ -1,0 +1,98 @@
+.carrito {
+    max-width: 1100px;
+    margin: 32px auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    padding: 16px;
+}
+
+.carrito h2 {
+    margin-bottom: 12px;
+}
+
+.carrito-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.carrito-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
+}
+
+.carrito-item img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.carrito-item .detalle {
+    flex: 1;
+}
+
+.carrito-item .qty {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.carrito-item .qty button {
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background: #fff;
+}
+
+.resumen {
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
+}
+
+.resumen p {
+    margin: 8px 0;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: var(--brand-siena-tostado);
+    color: #fff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background: transparent;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.carrito-empty {
+    text-align: center;
+    padding: 40px;
+}
+
+@media (max-width: 800px) {
+    .carrito {
+        grid-template-columns: 1fr;
+        padding: 12px;
+    }
+
+    .carrito-item img {
+        width: 80px;
+        height: 60px;
+    }
+}
