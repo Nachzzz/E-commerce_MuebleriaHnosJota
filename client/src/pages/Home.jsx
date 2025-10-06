@@ -11,7 +11,6 @@ const Home = () => {
       <HeroBanner />
       <FeaturedProducts />
       <BrandValues />
-      <Footer />
     </>
   );
 };

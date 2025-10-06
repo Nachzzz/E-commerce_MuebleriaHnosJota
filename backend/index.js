@@ -11,9 +11,19 @@ app.use((req, res, next) => {
   next();
 });
 
+// Simple CORS middleware for development
+app.use((req, res, next) => {
+  // Allow any origin for development; restrict in production
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
 app.use(express.json());
 
-// API routes
+// Llamada a la ruta de productos
 app.use('/api/productos', productosRouter);
 
 // Serve client public if needed (optional)

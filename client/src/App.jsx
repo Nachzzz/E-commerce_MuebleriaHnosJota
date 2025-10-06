@@ -1,22 +1,26 @@
-import { useState } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import NavBar from './components/NavBar.jsx'
+import Footer from './components/Footer.jsx'
 import Home from './pages/Home'
 import Products from './pages/Products'
+import Contacto from './pages/Contacto'
 import './App.css'
 
 function App() {
 
   return (
-    <>
+    <BrowserRouter>
       <div className='layout'>
         <NavBar />
-        {window.location.pathname.includes('/productos') || window.location.pathname.includes('/products') ? (
-          <Products />
-        ) : (
-          <Home />
-        )}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="/productos" element={<Products />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
       </div>
-    </>
+      <Footer />
+    </BrowserRouter>
   )
 }
 

@@ -19,7 +19,6 @@ body {
 .placas-container {
     display: flex;
     justify-content: center;
-    align-items: center;
     gap: 32px;
     margin-top: 32px;
 }
@@ -34,9 +33,14 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    width: 170px;
+    width: 220px;
     height: auto;
     font-size: 12px;
+}
+
+/* Make featured product cards a bit wider on desktop */
+#destacados-home .placa {
+    width: 220px;
 }
 
 .placa h2 {
