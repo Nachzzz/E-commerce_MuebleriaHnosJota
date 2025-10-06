@@ -1,0 +1,105 @@
+:root{
+    --header-height: 64px; /* adjustable */
+}
+
+/* Navbar estilos base */
+header.site-header {
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 2px 12px 0 rgba(160, 81, 45, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: var(--header-height);
+}
+
+nav.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 32px;
+    background: transparent;
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.logo img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.nav-links li {
+    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--brand-color-texto-gris, #6b6b6b);
+    font-family: var(--font-sans, sans-serif);
+    font-size: 15px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Ejemplo de botón carrito */
+.carrito-btn {
+    border: 1px solid var(--brand-siena-tostado, #A0522D);
+    color: var(--brand-siena-tostado, #A0522D);
+    background: #fff;
+    padding: 6px 14px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.carrito-btn:hover {
+    background: var(--brand-siena-tostado, #A0522D);
+    color: #fff;
+    border-color: var(--brand-siena-tostado, #A0522D);
+}
+
+.carrito-btn img {
+    width: 18px;
+    height: 18px;
+}
+
+.contador-carrito {
+    background: var(--brand-siena-tostado, #A0522D);
+    color: #fff;
+    border-radius: 999px;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+    .menu-toggle { display: block; }
+    .nav-links { display: none; position: absolute; top: 64px; right: 16px; background: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); flex-direction: column; gap: 8px; }
+    .nav-links.open { display: flex; }
+}

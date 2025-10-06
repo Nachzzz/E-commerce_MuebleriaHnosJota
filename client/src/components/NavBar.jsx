@@ -1,26 +1,52 @@
 import "../styles/NavBar.css";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { Link, useNavigate } from 'react-router-dom'
+import carritoIcon from '/carrito.svg'
+import CartContext from '../context/CartContext'
 
-const NavBar = ({ cartCount }) => {
+const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { totalCount } = useContext(CartContext) || { totalCount: 0 };
+  const navigate = useNavigate()
 
   return (
     <header className="site-header">
       <nav className="nav">
         <div className="logo">
-          <a href="/"><img src="/logo.svg" alt="Logo" /></a>
+          <button className="logo-btn" onClick={() => navigate('/') } aria-label="Inicio">
+            <img src="/logo.svg" alt="Logo Mueblería Jota Hnos" />
+          </button>
         </div>
 
-        <button onClick={() => setMenuOpen(!menuOpen)}>
+        <button
+          className="menu-toggle"
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
           ☰
         </button>
 
         <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
-          <li><a href="/">Inicio</a></li>
-          <li><a href="/productos">Productos</a></li>
           <li>
-            <button className="carrito-btn">
-              🛒 <span>{cartCount}</span>
+            <Link to="/">Inicio</Link>
+          </li>
+          <li>
+            <Link to="/productos">Productos</Link>
+          </li>
+          <li>
+            <Link to="/nosotros">Nosotros</Link>
+          </li>
+          <li>
+            <Link to="/contacto">Contacto</Link>
+          </li>
+          <li>
+            <button
+              className="carrito-btn"
+              aria-label={`Ver carrito, ${totalCount} items`}
+              onClick={() => navigate('/carrito')}
+            >
+              <img src={carritoIcon} alt="Carrito" className="carrito-icon" />
+              <span className="contador-carrito">{totalCount}</span>
             </button>
           </li>
         </ul>

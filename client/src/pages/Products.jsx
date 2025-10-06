@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import '../styles/Products.css';
 
-const Products = ({ setProductoSeleccionado, onAddToCart }) => {
+const Products = () => {
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [query, setQuery] = useState('');
@@ -12,24 +12,27 @@ const Products = ({ setProductoSeleccionado, onAddToCart }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('/api/productos');
-        if (!res.ok) throw new Error('API not available');
-        const data = await res.json();
-        setProducts(data);
-        setFiltered(data);
-      } catch (err) {
+        const tryFetch = async (url) => {
+          const r = await fetch(url, { cache: 'no-store' });
+          if (!r.ok) throw new Error(`API responded ${r.status}`);
+          return await r.json();
+        };
+
+        let data;
         try {
-          const res2 = await fetch('/data/productos.json');
-          const data2 = await res2.json();
-          setProducts(data2);
-          setFiltered(data2);
-        } catch (err2) {
-          console.error('Failed to load products', err2);
+          data = await tryFetch('/api/productos');
+        } catch {
+          // fallback to explicit backend host
+          data = await tryFetch('http://localhost:4000/api/productos');
         }
+
+        setProducts(Array.isArray(data) ? data : []);
+        setFiltered(Array.isArray(data) ? data : []);
       } finally {
         setLoading(false);
       }
     };
+
     fetchProducts();
   }, []);
 
@@ -40,16 +43,12 @@ const Products = ({ setProductoSeleccionado, onAddToCart }) => {
     }
     if (query && query.trim() !== '') {
       const q = query.toLowerCase();
-      list = list.filter(
-        (p) =>
-          (p.nombre || '').toLowerCase().includes(q) ||
-          (p.descripcion || '').toLowerCase().includes(q)
-      );
+      list = list.filter((p) => (p.nombre || '').toLowerCase().includes(q) || (p.descripcion || '').toLowerCase().includes(q));
     }
     setFiltered(list);
   }, [products, category, query]);
 
-  const categories = useMemo(() => {
+  const categories = React.useMemo(() => {
     const set = new Set(products.map((p) => p.tipo).filter(Boolean));
     return ['Todos', ...Array.from(set)];
   }, [products]);
@@ -71,7 +70,13 @@ const Products = ({ setProductoSeleccionado, onAddToCart }) => {
 
       <div className="buscar-product">
         <div className="buscador-product">
-          <form onSubmit={(e) => e.preventDefault()} role="search" className="buscador">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+            role="search"
+            className="buscador"
+          >
             <input
               type="text"
               placeholder="Buscar producto..."
@@ -84,7 +89,11 @@ const Products = ({ setProductoSeleccionado, onAddToCart }) => {
 
         <div className="coleccion1">
           {categories.map((cat) => (
-            <button key={cat} className="btn-coleccion" onClick={() => setCategory(cat)}>
+            <button
+              key={cat}
+              className="btn-coleccion"
+              onClick={() => setCategory(cat)}
+            >
               {cat}
             </button>
           ))}
@@ -97,14 +106,7 @@ const Products = ({ setProductoSeleccionado, onAddToCart }) => {
         ) : filtered.length === 0 ? (
           <p>No se encontraron productos</p>
         ) : (
-          filtered.map((p) => (
-            <ProductCard
-              key={p.id}
-              product={p}
-              onClick={() => setProductoSeleccionado(p)} // detalle
-              onAddToCart={() => onAddToCart(p)} // carrito
-            />
-          ))
+          filtered.map((p) => <ProductCard key={p.id} product={p} />)
         )}
       </div>
     </main>
@@ -112,4 +114,3 @@ const Products = ({ setProductoSeleccionado, onAddToCart }) => {
 };
 
 export default Products;
-
