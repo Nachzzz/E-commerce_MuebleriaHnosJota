@@ -24,19 +24,19 @@ const Footer = () => {
                 <div className="contacto">
                     <h3>Contacto</h3>
                     <p>
-                        <img src="/assets/img/Map pin.svg" alt="ubicación" className="icon-footer" />
+                        <img src="/Map pin.svg" alt="ubicación" className="icon-footer" />
                         Av. San Juan 2847 <br /> C1232AAB - Barrio de San Cristóbal <br /> Ciudad Autónoma de Buenos Aires <br /> Argentina
                     </p>
                     <p>
-                        <img src="/assets/img/phone.svg" alt="teléfono" className="icon-footer" />
+                        <img src="/phone.svg" alt="teléfono" className="icon-footer" />
                         +54 11 4567-8900
                     </p>
                     <p>
-                        <img src="/assets/img/mail.svg" alt="mail" className="icon-footer" />
+                        <img src="/Mail.svg" alt="mail" className="icon-footer" />
                         info@hermanosjota.com.ar <br /> ventas@hermanosjota.com.ar
                     </p>
                     <p>
-                        <img src="/assets/img/instagram.svg" alt="instagram" className="icon-footer" />
+                        <img src="/Instagram.svg" alt="instagram" className="icon-footer" />
                         @hermanosjota_ba
                     </p>
                 </div>
@@ -44,7 +44,7 @@ const Footer = () => {
                 <div className="horarios">
                     <h3>Horarios</h3>
                     <p>
-                        <img src="/assets/img/Clock.svg" alt="clock" className="icon-footer" />
+                        <img src="/Clock.svg" alt="clock" className="icon-footer" />
                         Lunes a Viernes: <br /> 10:00 - 19:00 <br /> <br /> Sábados: <br /> 10:00 - 14:00
                     </p>
                 </div>
