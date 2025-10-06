@@ -6,7 +6,7 @@ import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
 import Nosotros from './pages/Nosotros'
 import Contacto from './pages/Contacto'
-import ProductDetail from './pages/detail.jsx' 
+
 import './App.css'
 
 function App() {
