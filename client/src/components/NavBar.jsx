@@ -1,17 +1,20 @@
 import "../styles/NavBar.css";
 import { useState } from "react";
+import { Link, useNavigate } from 'react-router-dom'
+import carritoIcon from '../assets/carrito.svg'
 
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartCount] = useState(0); // replace with real state later
+  const [cartCount] = useState(0);
+  const navigate = useNavigate()
 
   return (
     <header className="site-header">
       <nav className="nav">
         <div className="logo">
-          <a href="/">
+          <button className="logo-btn" onClick={() => navigate('/') } aria-label="Inicio">
             <img src="/logo.svg" alt="Logo Mueblería Jota Hnos" />
-          </a>
+          </button>
         </div>
 
         <button
@@ -24,22 +27,25 @@ const NavBar = () => {
 
         <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
           <li>
-            <a href="/">Inicio</a>
+            <Link to="/">Inicio</Link>
           </li>
           <li>
-            <a href="/productos">Productos</a>
+            <Link to="/productos">Productos</Link>
           </li>
           <li>
-            <a href="/nosotros">Nosotros</a>
+            <Link to="/nosotros">Nosotros</Link>
           </li>
           <li>
-            <a href="/contacto">Contacto</a>
+            <Link to="/contacto">Contacto</Link>
           </li>
           <li>
-            <button className="carrito-btn" aria-label={`Ver carrito, ${cartCount} items`}>
-              <img src="assets/carrito.svg" alt="carrito" />
+            <button
+              className="carrito-btn"
+              aria-label={`Ver carrito, ${cartCount} items`}
+              onClick={() => navigate('/carrito')}
+            >
+              <img src={carritoIcon} alt="Carrito" className="carrito-icon" />
               <span className="contador-carrito">{cartCount}</span>
-              <a href="/carrito">Carrito</a>
             </button>
           </li>
         </ul>

@@ -12,20 +12,22 @@ const Products = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('/api/productos');
-        if (!res.ok) throw new Error('API not available');
-        const data = await res.json();
-        setProducts(data);
-        setFiltered(data);
-      } catch (err) {
+        const tryFetch = async (url) => {
+          const r = await fetch(url, { cache: 'no-store' });
+          if (!r.ok) throw new Error(`API responded ${r.status}`);
+          return await r.json();
+        };
+
+        let data;
         try {
-          const res2 = await fetch('/data/productos.json');
-          const data2 = await res2.json();
-          setProducts(data2);
-          setFiltered(data2);
-        } catch (err2) {
-          console.error('Failed to load products', err2);
+          data = await tryFetch('/api/productos');
+        } catch (err) {
+          // fallback to explicit backend host
+          data = await tryFetch('http://localhost:4000/api/productos');
         }
+
+        setProducts(Array.isArray(data) ? data : []);
+        setFiltered(Array.isArray(data) ? data : []);
       } finally {
         setLoading(false);
       }

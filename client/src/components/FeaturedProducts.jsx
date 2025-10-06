@@ -5,23 +5,29 @@ import '../styles/Home.css';
 const FeaturedProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('/api/productos');
-        if (!res.ok) throw new Error('API not available');
-        const data = await res.json();
-        setProducts(data.slice(0, 4));
-      } catch (err) {
-        // Llamada de respaldo al archivo JSON local. Se usaba antes para pruebas
+        const tryFetch = async (url) => {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) throw new Error(`API responded ${res.status}`);
+          return await res.json();
+        };
+
+        let data;
         try {
-          const res2 = await fetch('/data/productos.json');
-          const data2 = await res2.json();
-          setProducts(data2.slice(0, 4));
-        } catch (err2) {
-          console.error('Failed to load products', err2);
+          data = await tryFetch('/api/productos/destacados');
+        } catch (err) {
+          // fallback to explicit backend host
+          data = await tryFetch('http://localhost:4000/api/productos/destacados');
         }
+
+        setProducts(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error('Error fetching featured products:', err);
+        setError(err.message || 'Error fetching products');
       } finally {
         setLoading(false);
       }
@@ -31,6 +37,7 @@ const FeaturedProducts = () => {
   }, []);
 
   if (loading) return <div className="placas-container">Cargando productos...</div>;
+  if (error) return <div className="placas-container">Error cargando productos: {error}</div>;
 
   return (
     <section className="productos-destacados">

@@ -8,25 +8,43 @@ const HeroBanner = () => {
 
   useEffect(() => {
     let mounted = true;
+
+    const fetchAsJson = async (url) => {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`API responded ${res.status}`);
+      const contentType = res.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        return await res.json();
+      }
+      // If it's not JSON, read text to provide a better error message
+      const txt = await res.text();
+      throw new Error(
+        `Expected JSON but received ${contentType || "text/html"} - first chars: ${txt.slice(
+          0,
+          80
+        )}`
+      );
+    };
+
     const fetchHero = async () => {
       try {
-        const res = await fetch('/api/productos');
-        if (!res.ok) throw new Error('API not available');
-        const products = await res.json();
-        const p = products.find((x) => Number(x.id) === 1);
-        if (p && p.imagen && mounted) setHeroImg(p.imagen);
-      } catch (err) {
+        let p;
+        // Try the relative path first (works if backend is proxied or served from same origin)
         try {
-          const res2 = await fetch('/data/productos.json');
-          const products2 = await res2.json();
-          const p2 = products2.find((x) => Number(x.id) === 1);
-          if (p2 && p2.imagen && mounted) setHeroImg(p2.imagen);
-        } catch (err2) {
-          if (mounted) {
-            console.error(err2);
-            setError(err2.message || 'Error cargando productos');
+          p = await fetchAsJson("/api/productos/1");
+        } catch (err) {
+          // If relative fails (for example Vite serving index.html returns HTML), fall back to explicit backend host
+          try {
+            p = await fetchAsJson("http://localhost:4000/api/productos/1");
+          } catch (err2) {
+            // Prefer the original error if it looks like HTML was returned (Unexpected token '<')
+            throw err2;
           }
         }
+
+        if (p && p.imagen && mounted) setHeroImg(p.imagen);
+      } catch (err) {
+        if (mounted) setError(err.message || "Error fetching hero image");
       } finally {
         if (mounted) setLoading(false);
       }
@@ -83,9 +101,11 @@ const HeroBanner = () => {
           {loading ? (
             <div>Loading image...</div>
           ) : error ? (
-            <div>Error cargando imagen</div>
-          ) : (
+            <div>Error cargando imagen: {error}</div>
+          ) : heroImg ? (
             <img src={heroImg} alt="Muebles de Madera de Autor" />
+          ) : (
+            <div>Imagen no disponible</div>
           )}
         </div>
       </section>
