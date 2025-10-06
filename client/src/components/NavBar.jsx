@@ -1,11 +1,12 @@
 import "../styles/NavBar.css";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from 'react-router-dom'
 import carritoIcon from '/carrito.svg'
+import CartContext from '../context/CartContext'
 
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [cartCount] = useState(0);
+  const { totalCount } = useContext(CartContext) || { totalCount: 0 };
   const navigate = useNavigate()
 
   return (
@@ -41,11 +42,11 @@ const NavBar = () => {
           <li>
             <button
               className="carrito-btn"
-              aria-label={`Ver carrito, ${cartCount} items`}
+              aria-label={`Ver carrito, ${totalCount} items`}
               onClick={() => navigate('/carrito')}
             >
               <img src={carritoIcon} alt="Carrito" className="carrito-icon" />
-              <span className="contador-carrito">{cartCount}</span>
+              <span className="contador-carrito">{totalCount}</span>
             </button>
           </li>
         </ul>

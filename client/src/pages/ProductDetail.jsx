@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/Products.css';
 import '../styles/ProductDetail.css';
+import CartContext from '../context/CartContext';
 
 export default function ProductDetail() {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { addToCart } = useContext(CartContext);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -38,8 +40,8 @@ export default function ProductDetail() {
   }, [id]);
 
   const handleAddToCart = (p) => {
-    // placeholder: in real app you'd update context/global state
-    console.log('Añadir al carrito', p);
+    addToCart(p, 1);
+    // optionally navigate to carrito
     // navigate('/carrito')
   };
 
