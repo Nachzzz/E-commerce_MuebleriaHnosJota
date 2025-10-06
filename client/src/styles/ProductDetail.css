@@ -1,0 +1,91 @@
+.product-detail {
+  max-width: 30%;
+  margin: 32px auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.product-detail button {
+  background-color: var(--brand-siena-tostado);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.product-detail h2 {
+  margin: 8px 0 12px;
+  color: #1f1f1f;
+}
+
+.detalle-imagen {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.valoracion-estrellas {
+  color: #f4c542;
+  font-size: 20px;
+  margin: 8px 0 12px;
+}
+
+.product-detail p {
+  color: #333;
+  line-height: 1.5;
+}
+
+.product-detail .precio {
+  font-size: 22px;
+  color: #8a3b1a;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+.product-detail .detalle-meta {
+  margin: 10px 0;
+  color: #555;
+}
+
+.product-detail .acciones {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.product-detail .acciones .btn-primary {
+  background: var(--brand-siena-tostado);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.product-detail .acciones .btn-secondary {
+  background: transparent;
+  border: 1px solid #ccc;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .product-detail {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    margin: 16px;
+  }
+}
