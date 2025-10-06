@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/Products.css';
 import '../styles/ProductDetail.css';
 import CartContext from '../context/CartContext';
+import NotificationContext from '../context/NotificationContext';
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -10,6 +11,7 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
+  const { show } = useContext(NotificationContext);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -41,6 +43,7 @@ export default function ProductDetail() {
 
   const handleAddToCart = (p) => {
     addToCart(p, 1);
+    show(`Añadido: ${p.nombre}`);
     // optionally navigate to carrito
     // navigate('/carrito')
   };

@@ -1,0 +1,27 @@
+/* estilos para las notificaciones */
+
+.toasts-root {
+  position: fixed;
+  right: 16px;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 9999;
+}
+
+.toast {
+  background: rgba(0,0,0,0.85);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  min-width: 160px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  transform-origin: top right;
+  animation: toast-in 220ms ease;
+}
+
+@keyframes toast-in {
+  from { transform: translateY(-8px) scale(.98); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
