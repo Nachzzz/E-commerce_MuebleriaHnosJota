@@ -15,7 +15,7 @@ El objetivo es una aplicación cliente-servidor mínima que permita listar produ
   - [Frontend (Vite + React)](#frontend-vite--react)
   - [Flujo recomendado de desarrollo](#flujo-recomendado-de-desarrollo)
 - [API (endpoints)](#api-endpoints)
-- [Créditos y licencias](#créditos-y-licencias)
+- [Créditos](#créditos)
 
 ---
 
@@ -38,14 +38,13 @@ Raíz (extracto):
   package.json
   index.js
   /routes/productos.js
-  /data/productos.js
+  /data/productos.json
 /client/
   package.json
   /public/
-    /data/productos.json
-    /assets/...
   /src/
     /components/  (NavBar, HeroBanner, ProductCard...)
+    /context/     (CartContext, NotificationContext)
     /pages/       (Home.jsx, Products.jsx)
     /styles/      (App.css, Home.css, Products.css...)
 ```
@@ -54,9 +53,7 @@ Raíz (extracto):
 
 ## Requisitos previos
 - Node.js >= 16.x
-- npm (v8+) o yarn
-
-Se recomienda usar nvm o similar para gestionar versiones de Node.
+- npm (v8+)
 
 ---
 
@@ -116,9 +113,6 @@ npm run dev
 cd client
 npm run dev
 ```
-3. Abre `http://localhost:5173` y prueba:
-   - Home
-   - Productos: `http://localhost:5173/productos` (o `.../products` según detección en `App.jsx`)
 
 ---
 
@@ -143,12 +137,10 @@ Ejemplo de respuesta (parcial):
 
 ---
 
-## Créditos y licencia
+## Créditos
 Proyecto creado por el Grupo 4.
 - Camila Selene Varela
 - Suarez Gatica Agustina
 - Salto Jorge Ignacio
-
-Licencia: MIT (por defecto)
 
 ---
