@@ -1,79 +1,186 @@
 const express = require('express');
 const router = express.Router();
-const productos = require('../data/productos');
-const fs = require('fs').promises;
-const path = require('path');
+const { body, validationResult } = require('express-validator');
 
-// Endpoint GET /api/productos - devuelve todos los productos
-router.get('/', (req, res) => {
-  const destacados = productos;
-  res.json(destacados);
+// Importamos el modelo de Producto
+// (Asegúrate de que la ruta a tu modelo sea correcta desde la carpeta 'routes')
+const Producto = require('../models/producto_model');
+
+/**
+ * Middleware de Ayuda:
+ * Revisa si validationResult tuvo errores y responde si los hay.
+ */
+const handleValidationErrors = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ 
+            msg: "Error de validación de datos", 
+            errors: errors.array() 
+        });
+    }
+    // Si no hay errores, pasa al siguiente middleware (el controlador async)
+    next();
+};
+
+/**
+ * Reglas de Validación para POST (Crear Producto)
+ * Aquí los campos son obligatorios.
+ */
+const validatePostProduct = [
+    body('nombre')
+        .trim()
+        .notEmpty().withMessage('El nombre es obligatorio.')
+        .isLength({ min: 2 }).withMessage('El nombre debe tener al menos 2 caracteres.'),
+    
+    body('precio')
+        .notEmpty().withMessage('El precio es obligatorio.')
+        .isNumeric().withMessage('El precio debe ser un valor numérico.')
+        .isFloat({ gt: 0 }).withMessage('El precio debe ser mayor que 0.'),
+    
+    body('stock')
+        .optional() // El stock es opcional al crear
+        .isNumeric().withMessage('El stock debe ser un número.')
+        .isInt({ min: 0 }).withMessage('El stock no puede ser negativo.')
+];
+
+/**
+ * Reglas de Validación para PUT (Actualizar Producto)
+ * Aquí todos los campos son opcionales.
+ */
+const validatePutProduct = [
+    body('nombre')
+        .optional() // <-- Esta es la corrección clave para PUT
+        .trim()
+        .isLength({ min: 2 }).withMessage('El nombre debe tener al menos 2 caracteres.'),
+    
+    body('precio')
+        .optional() // <-- Corrección clave
+        .isNumeric().withMessage('El precio debe ser un valor numérico.')
+        .isFloat({ gt: 0 }).withMessage('El precio debe ser mayor que 0.'),
+    
+    body('stock')
+        .optional() // <-- Corrección clave
+        .isNumeric().withMessage('El stock debe ser un número.')
+        .isInt({ min: 0 }).withMessage('El stock no puede ser negativo.')
+];
+
+
+// --- DEFINICIÓN DE ENDPOINTS CRUD ---
+
+/**
+ * @route   GET /api/productos
+ * @desc    Devuelve todos los productos de la colección.
+ */
+router.get('/', async (req, res) => {
+    try {
+        const productos = await Producto.find({});
+        res.json(productos);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: 'Error del servidor al obtener productos.' });
+    }
 });
 
-// Endpoint GET /api/productos/destacados - devuelve los 4 productos destacados
-router.get('/destacados', (req, res) => {
-  const destacados = productos.slice(0, 4);
-  res.json(destacados);
+/**
+ * @route   GET /api/productos/:id
+ * @desc    Devuelve un único producto por su _id.
+ */
+router.get('/:id', async (req, res) => {
+    try {
+        const producto = await Producto.findById(req.params.id);
+        if (!producto) {
+            return res.status(404).json({ msg: 'Producto no encontrado.' });
+        }
+        res.json(producto);
+    } catch (err) {
+        console.error(err.message);
+        // Manejo de error si el ID tiene un formato inválido
+        if (err.kind === 'ObjectId') {
+            return res.status(404).json({ msg: 'Producto no encontrado (ID mal formado).' });
+        }
+        res.status(500).json({ msg: 'Error del servidor.' });
+    }
 });
 
-// Endpoint GET /api/productos/:id - devuelve un producto por id
-router.get('/:id', (req, res) => {
-  const id = Number(req.params.id);
-  const p = productos.find((x) => Number(x.id) === id);
-  if (!p) return res.status(404).json({ error: 'Producto no encontrado' });
-  res.json(p);
+/**
+ * @route   POST /api/productos
+ * @desc    Crea un nuevo documento en la base de datos.
+ */
+router.post('/',
+    validatePostProduct,      // 1. Aplica reglas de POST
+    handleValidationErrors,   // 2. Maneja errores de validación
+    async (req, res) => {
+        try {
+            // req.body ya fue validado
+            const nuevoProducto = new Producto(req.body);
+            
+            await nuevoProducto.save();
+            
+            res.status(201).json(nuevoProducto); // 201 Created
+
+        } catch (err) {
+            console.error(err.message);
+            res.status(500).json({ msg: 'Error del servidor al crear el producto.' });
+        }
+    }
+);
+
+/**
+ * @route   PUT /api/productos/:id
+ * @desc    Recibe datos y modifica el producto en la base de datos.
+ */
+router.put('/:id',
+    validatePutProduct,       // 1. Aplica reglas de PUT (opcionales)
+    handleValidationErrors,   // 2. Maneja errores de validación
+    async (req, res) => {
+        try {
+            // $set: req.body actualiza solo los campos que vienen en el body
+            // new: true devuelve el documento modificado
+            const producto = await Producto.findByIdAndUpdate(
+                req.params.id,
+                { $set: req.body },
+                { new: true, runValidators: true } 
+            );
+
+            if (!producto) {
+                return res.status(404).json({ msg: 'Producto no encontrado.' });
+            }
+
+            res.status(200).json(producto); // 200 OK
+
+        } catch (err) {
+            console.error(err.message);
+            if (err.kind === 'ObjectId') {
+                return res.status(404).json({ msg: 'Producto no encontrado (ID mal formado).' });
+            }
+            res.status(500).json({ msg: 'Error del servidor al actualizar.' });
+        }
+    }
+);
+
+/**
+ * @route   DELETE /api/productos/:id
+ * @desc    Elimina un producto de la base de datos por su _id.
+ */
+router.delete('/:id', async (req, res) => {
+    try {
+        const producto = await Producto.findByIdAndDelete(req.params.id);
+
+        if (!producto) {
+            return res.status(404).json({ msg: 'Producto no encontrado.' });
+        }
+
+        res.status(200).json({ msg: 'Producto eliminado correctamente.' });
+
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind === 'ObjectId') {
+            return res.status(404).json({ msg: 'Producto no encontrado (ID mal formado).' });
+        }
+        res.status(500).json({ msg: 'Error del servidor al eliminar.' });
+    }
 });
 
-// Endpoint POST /api/productos - crea un nuevo producto
-router.post('/', (req, res) => {
-  const { nombre, descripcion, precio, stock, imagen, valoracion, tipo, material, acabado, medidas, tiempo } = req.body;
 
-  // Validar que se recibieron todos los campos necesarios
-  if (!nombre || !descripcion || !precio || !stock || !imagen || !valoracion || !tipo || !material || !acabado || !medidas || !tiempo) {
-    return res.status(400).json({ error: 'Faltan campos requeridos' });
-  }
-
-  // Crear un nuevo producto
-  const nuevoProducto = {
-    id: productos.length + 1,
-    nombre,
-    descripcion,
-    precio,
-    stock,
-    imagen,
-    valoracion,
-    tipo,
-    material,
-    acabado,
-    medidas,
-    tiempo
-  };
-  productos.push(nuevoProducto);
-  res.status(201).json(nuevoProducto);
-});
-
-// Persistir nuevo producto en backend/data/productos.json (safe async version)
-router.post('/persist', async (req, res) => {
-  const filePath = path.join(__dirname, '..', 'data', 'productos.json');
-  const nuevoProducto = req.body;
-
-  // Basic validation
-  if (!nuevoProducto || !nuevoProducto.nombre) {
-    return res.status(400).json({ error: 'Producto inválido' });
-  }
-
-  try {
-    const raw = await fs.readFile(filePath, 'utf8');
-    const list = JSON.parse(raw || '[]');
-    nuevoProducto.id = list.length > 0 ? list[list.length - 1].id + 1 : 1;
-    list.push(nuevoProducto);
-    await fs.writeFile(filePath, JSON.stringify(list, null, 2), 'utf8');
-    return res.status(201).json({ mensaje: 'Producto guardado', producto: nuevoProducto });
-  } catch (err) {
-    console.error('Error escribiendo productos.json', err);
-    return res.status(500).json({ error: 'No se pudo guardar el producto' });
-  }
-});
-
+// Exportamos el router para que index.js pueda usarlo
 module.exports = router;
-
