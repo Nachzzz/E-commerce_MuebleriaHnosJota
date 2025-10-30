@@ -30,6 +30,32 @@ nav.nav {
     object-fit: contain;
 }
 
+/* Remove default blue focus/hover effect on the logo button */
+.logo .logo-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    -webkit-tap-highlight-color: transparent; /* mobile */
+}
+
+.logo .logo-btn:focus,
+.logo .logo-btn:active,
+.logo .logo-btn:hover {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Keep an accessible focus style for keyboard users if desired
+.logo .logo-btn:focus-visible {
+    outline: 2px solid rgba(160,81,45,0.18);
+    border-radius: 6px;
+}
+*/
+
 .nav-links {
     list-style: none;
     display: flex;

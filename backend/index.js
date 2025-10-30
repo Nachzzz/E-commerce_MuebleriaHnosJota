@@ -1,8 +1,25 @@
 const express = require('express');
+require('dotenv').config();
 const path = require('path');
 const productosRouter = require('./routes/productos');
 
 const app = express();
+const { connectDB } = require('./data/db.js');
+
+//Conexión a MongoDB
+connectDB().then(() => {
+  console.log('Base de datos conectada correctamente ✅');
+
+  //Inicio del servidor
+  app.listen(PORT, () => {
+    console.log(`Backend alojado en http://localhost:${PORT}`);
+  });
+})
+.catch((error) => {
+  console.error('Error al conectar a la base de datos:', error.message)
+  process.exit(1)
+})
+
 const PORT = process.env.PORT || 4000;
 
 // Simple logger middleware
@@ -40,6 +57,4 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Backend listening on http://localhost:${PORT}`);
-});
+
