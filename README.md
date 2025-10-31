@@ -2,29 +2,24 @@
 
 Este repositorio contiene una aplicación de e-commerce (frontend en React + backend en Express) creada como entrega para el proyecto "Mueblería Hermanos Jota".
 
-El objetivo es una aplicación cliente-servidor mínima que permita listar productos, ver destacados y servir una API REST simple desde un backend Express que utiliza un archivo local como fuente de datos.
+El objetivo es una aplicación cliente-servidor completa que permite listar, crear, editar y eliminar productos, conectada a una base de datos de MongoDB Atlas mediante Mongoose.
+
+## 🚀 Enlaces de Despliegue
+
+Frontend (Vercel/Netlify):
+
+Backend (Render):
 
 ---
 
 ## Tabla de contenido
-- [Demo y objetivo](#demo-y-objetivo)
 - [Estructura del repositorio](#estructura-del-repositorio)
 - [Requisitos previos](#requisitos-previos)
 - [Instalación y ejecución](#instalación-y-ejecución)
   - [Backend (Express)](#backend-express)
   - [Frontend (Vite + React)](#frontend-vite--react)
-  - [Flujo recomendado de desarrollo](#flujo-recomendado-de-desarrollo)
 - [API (endpoints)](#api-endpoints)
 - [Créditos](#créditos)
-
----
-
-## Demo y objetivo
-Una tienda ficticia que muestra:
-- Frontend en React (Vite) con componentes: NavBar, HeroBanner, FeaturedProducts, Products, Footer, etc.
-- Backend en Express que expone una API REST con los productos cargados desde un archivo local (`backend/data/productos.js`).
-
-La interfaz consume inicialmente la ruta `/api/productos` (si el backend está activo) y, en caso de no estarlo, usa un fallback estático `client/public/data/productos.json`.
 
 ---
 
@@ -37,16 +32,22 @@ Raíz (extracto):
 /backend/
   package.json
   index.js
+  .env.example (Deberás crear tu .env)
+  seeder.js       (Script para poblar la DB)
   /routes/productos.js
-  /data/productos.json
+  /models/producto_model.js
+  /data/
+    productos.json  (Datos para el seeder)
+    db.js           (Lógica de conexión a Mongoose)
 /client/
   package.json
-  /public/
   /src/
-    /components/  (NavBar, HeroBanner, ProductCard...)
-    /context/     (CartContext, NotificationContext)
-    /pages/       (Home.jsx, Products.jsx)
-    /styles/      (App.css, Home.css, Products.css...)
+    /components/
+    /context/
+    /pages/
+    /styles/
+    App.jsx
+    main.jsx
 ```
 
 ---
@@ -54,6 +55,7 @@ Raíz (extracto):
 ## Requisitos previos
 - Node.js >= 16.x
 - npm (v8+)
+- Una cuenta de MongoDB Atlas (para obtener la cadena de conexión)
 
 ---
 
@@ -69,17 +71,31 @@ cd backend
 ```powershell
 npm install
 ```
-3. Levantar el servidor en modo desarrollo (con nodemon):
+3. Configurar Variables de Entorno (.env)
+Crea un archivo llamado .env dentro de la carpeta backend/. Copia el siguiente contenido y reemplaza los valores con tu información de MongoDB Atlas.
+
+```powershell
+# Puerto en el que correrá el servidor
+PORT=4000
+
+# Cadena de conexión de MongoDB Atlas
+# Asegúrate de reemplazar <usuario>, <password> y <cluster_url>
+# y de incluir el nombre de tu base de datos (ej: muebleriajhnos)
+DB_URL="mongodb+srv://<usuario>:<password>@<cluster_url>/muebleriajhnos?retryWrites=true&w=majority"
+```
+4. Poblar la Base de Datos (Seeding)
+Este comando borrará los datos existentes e insertará los 11 productos del archivo productos.json en tu base de datos de Atlas.
+
+```powershell
+node seeder.js
+```
+(Deberías ver un mensaje de éxito: 🎉 11 productos importados correctamente...)
+
+5. Levantar el servidor en modo desarrollo (con nodemon):
 ```powershell
 npm run dev
 ```
-4. El servidor por defecto escucha en `http://localhost:4000`.
-
-Endpoints disponibles:
-- `GET /api/productos` — devuelve array con todos los productos.
-- `GET /api/productos/:id` — devuelve producto por `id` (404 si no existe).
-
-> Nota: el servidor incluye un middleware global que imprime en consola cada petición (método y URL), y usa `express.json()`.
+6. El servidor por defecto escucha en `http://localhost:4000`.
 
 ### Frontend (Vite + React)
 1. Abrir otra terminal en la carpeta `client`:
@@ -102,38 +118,23 @@ El frontend intentará llamar a `/api/productos`. Si el backend corre en `localh
 
 ---
 
-## Flujo recomendado de desarrollo
-1. Ejecuta el backend:
-```powershell
-cd backend
-npm run dev
-```
-2. Ejecuta el frontend:
-```powershell
-cd client
-npm run dev
-```
-
----
-
 ## API (endpoints)
-- GET /api/productos
-  - Respuesta: 200 OK
-  - Body: Array de objetos producto
-- GET /api/productos/:id
-  - Respuesta: 200 OK con el producto si existe
-  - 404 Not Found si no existe
+La API conectada a MongoDB expone los siguientes endpoints:
 
-Ejemplo de respuesta (parcial):
-```json
-{
-  "id": 1,
-  "nombre": "Aparador Uspallata",
-  "precio": 185000,
-  "imagen": "https://nachzzz.github.io/img_ecommerce/aparadorUspallata.png",
-  ...
-}
-```
+- GET /api/productos
+  - Devuelve un array con todos los productos de la colección.
+- GET /api/productos/:id
+  - Devuelve un único producto por su _id.
+  - 404 Not Found si no existe.
+- POST /api/productos
+  - Recibe un objeto JSON en el body para crear un nuevo producto.
+  - Devuelve el producto creado con estado 201.
+- PUT /api/productos/:id 
+  - Recibe un objeto JSON en el body con los campos a actualizar.
+  - Devuelve el producto actualizado.
+- DELETE /api/productos/:id
+  - Elimina un producto por su _id.
+  - Devuelve un msj de confirmación.
 
 ---
 
