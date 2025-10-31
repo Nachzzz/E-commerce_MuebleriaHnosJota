@@ -5,6 +5,10 @@ import '../styles/ProductDetail.css';
 import CartContext from '../context/CartContext';
 import NotificationContext from '../context/NotificationContext';
 
+// Variable de entorno para el despliegue
+// Lee la variable VITE_API_URL de Vercel/Vite. Usa localhost como fallback.
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
 export default function ProductDetail() {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
@@ -26,10 +30,14 @@ export default function ProductDetail() {
         };
 
         let data;
+        
+        // CORRECCIÓN 1: Usamos API_URL en la llamada de Fetch
         try {
-          data = await tryFetch(`/api/productos/${id}`);
+          data = await tryFetch(`${API_URL}/api/productos/${id}`);
         } catch (err) {
-          data = await tryFetch(`http://localhost:4000/api/productos/${id}`);
+          // Si falla, el tryFetch ya usó el fallback de la propia API_URL
+          console.error("Error en la llamada a la API:", err);
+          data = null;
         }
 
         setProducto(data);
@@ -52,7 +60,8 @@ export default function ProductDetail() {
   // 2. Nueva función para manejar el borrado
   const handleConfirmDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/productos/${id}`, {
+      // CORRECCIÓN 2: Usamos API_URL en la llamada DELETE
+      const response = await fetch(`${API_URL}/api/productos/${id}`, {
         method: 'DELETE',
       });
 
@@ -61,12 +70,13 @@ export default function ProductDetail() {
       }
 
       show('Producto eliminado correctamente.');
+      // Redirigir al catálogo después del borrado
       navigate('/productos');
 
     } catch (err) {
       console.error('Error al eliminar:', err);
       show('Error al eliminar el producto.');
-      setIsDeleting(false);
+      setIsDeleting(false); // Ocultar confirmación si falla
     }
   };
 
