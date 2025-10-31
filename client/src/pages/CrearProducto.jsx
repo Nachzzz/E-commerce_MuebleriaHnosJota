@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Estilos simples para el formulario (puedes moverlos a un .css)
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
+// Estilos provisorioss para el formulario xd
 const styles = {
   main: {
     padding: '2rem',
@@ -32,7 +34,7 @@ const styles = {
   },
   button: {
     padding: '12px 20px',
-    background: '#A0522D', // Tu color --brand-siena-tostado
+    background: '#A0522D',
     color: '#fff',
     border: 'none',
     borderRadius: '8px',
@@ -79,7 +81,7 @@ const CrearProducto = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:4000/api/productos', {
+      const response = await fetch(`${API_URL}/api/productos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
