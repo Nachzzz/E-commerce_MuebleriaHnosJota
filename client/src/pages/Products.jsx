@@ -3,7 +3,6 @@ import ProductCard from '../components/ProductCard';
 import '../styles/Products.css';
 
 const Products = () => {
-  // ... (el fetch y los useEffects están bien) ...
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [query, setQuery] = useState('');

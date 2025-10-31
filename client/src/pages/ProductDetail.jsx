@@ -13,6 +13,9 @@ export default function ProductDetail() {
   const { addToCart } = useContext(CartContext);
   const { show } = useContext(NotificationContext);
 
+  // 1. Nuevo estado para manejar la confirmación de borrado
+  const [isDeleting, setIsDeleting] = useState(false);
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -44,9 +47,30 @@ export default function ProductDetail() {
   const handleAddToCart = (p) => {
     addToCart(p, 1);
     show(`Añadido: ${p.nombre}`);
-    // optionally navigate to carrito
-    // navigate('/carrito')
   };
+
+  // 2. Nueva función para manejar el borrado
+  const handleConfirmDelete = async () => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/productos/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('No se pudo eliminar el producto.');
+      }
+
+      show('Producto eliminado correctamente.');
+      // Redirigir al catálogo después del borrado
+      navigate('/productos');
+
+    } catch (err) {
+      console.error('Error al eliminar:', err);
+      show('Error al eliminar el producto.');
+      setIsDeleting(false); // Ocultar confirmación si falla
+    }
+  };
+
 
   if (loading) return <p>Cargando...</p>;
   if (!producto) return <p>Producto no encontrado.</p>;
@@ -62,10 +86,7 @@ export default function ProductDetail() {
         ))}
       </div>
       
-      {/* CORRECCIÓN: 
-        Cambiamos 'producto.imagen' a 'producto.imagenUrl' 
-        para que coincida con el modelo de Mongoose.
-      */}
+      {/* Usamos 'imagenUrl' (de Mongo) */}
       <img src={producto.imagenUrl} alt={producto.nombre} className="detalle-imagen" />
       
       <p>{producto.descripcion1}</p>
@@ -76,7 +97,27 @@ export default function ProductDetail() {
       {producto.tiempo && <p><strong>Tiempo de entrega:</strong> {producto.tiempo}</p>}
 
       <button className="btn-primary" onClick={() => handleAddToCart(producto)}>🛒 Añadir al Carrito</button>
+
+      {/* 3. Nuevos elementos JSX para el borrado y confirmación */}
+      <div className="admin-actions">
+        {!isDeleting ? (
+          // Botón principal de Eliminar
+          <button className="btn-danger" onClick={() => setIsDeleting(true)}>
+            Eliminar Producto (Admin)
+          </button>
+        ) : (
+          // Diálogo de confirmación
+          <div className="confirmation-dialog">
+            <p>¿Estás seguro de que quieres eliminar este producto?</p>
+            <button className="btn-danger" onClick={handleConfirmDelete}>
+              Sí, eliminar
+            </button>
+            <button className="btn-secondary" onClick={() => setIsDeleting(false)}>
+              Cancelar
+            </button>
+          </div>
+        )}
+      </div>
     </main>
   );
 }
-

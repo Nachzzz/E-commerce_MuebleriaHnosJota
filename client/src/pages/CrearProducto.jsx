@@ -113,8 +113,8 @@ const CrearProducto = () => {
       <h2>Panel de Administración</h2>
       <h1>Crear Nuevo Producto</h1>
       <p>
-        Este formulario enviará los datos (hará un POST) a tu endpoint 
-        <code> /api/productos</code> para crear un nuevo ítem en MongoDB.
+        Este formulario enviará los datos (hará un POST) al endpoint 
+        <code> /api/productos</code> para crear un nuevo ítem en la Base de Datos.
       </p>
 
       <form onSubmit={handleSubmit} style={styles.form}>

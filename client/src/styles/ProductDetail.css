@@ -87,5 +87,63 @@
     grid-template-columns: 1fr;
     padding: 16px;
     margin: 16px;
+    max-width: 90%; /* Ajuste para móviles */
   }
 }
+
+
+/* --- NUEVOS ESTILOS PARA EL BOTÓN DE ELIMINAR --- */
+
+.admin-actions {
+  width: 100%;
+  border-top: 1px solid #eee;
+  margin-top: 20px;
+  padding-top: 20px;
+}
+
+/* Botón de Peligro (Rojo) */
+.btn-danger {
+  background-color: #d9534f !important; /* Rojo peligro */
+  border-color: #d9534f !important;
+  color: white !important;
+  width: 100%;
+  padding: 10px;
+  font-weight: 600;
+}
+
+.btn-danger:hover {
+  background-color: #c9302c !important;
+}
+
+/* Botón Secundario (Gris/Cancelar) */
+.btn-secondary {
+  background: #f4f4f4 !important;
+  border: 1px solid #ccc !important;
+  color: #333 !important;
+}
+
+.btn-secondary:hover {
+  background: #e9e9e9 !important;
+}
+
+/* Diálogo de Confirmación */
+.confirmation-dialog {
+  padding: 16px;
+  background: #fff8f8;
+  border: 1px solid #d9534f;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.confirmation-dialog p {
+  color: #333;
+  font-weight: 600;
+  margin-top: 0;
+}
+
+.confirmation-dialog button {
+  width: auto;
+  padding: 8px 16px;
+  margin: 0 5px;
+}
+
