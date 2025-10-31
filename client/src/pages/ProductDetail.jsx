@@ -5,6 +5,8 @@ import '../styles/ProductDetail.css';
 import CartContext from '../context/CartContext';
 import NotificationContext from '../context/NotificationContext';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
 export default function ProductDetail() {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
@@ -29,7 +31,7 @@ export default function ProductDetail() {
         try {
           data = await tryFetch(`/api/productos/${id}`);
         } catch (err) {
-          data = await tryFetch(`http://localhost:4000/api/productos/${id}`);
+          data = await tryFetch(`${API_URL}/api/productos/${id}`);
         }
 
         setProducto(data);
