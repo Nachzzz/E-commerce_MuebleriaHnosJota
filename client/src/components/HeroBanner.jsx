@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom'
 import "../styles/HeroBanner.css";
 
 // Variable de entorno para el despliegue
@@ -95,12 +96,12 @@ const HeroBanner = () => {
           </p>
 
           <div className="div-btn">
-            <a className="btn-hero links" href="/contacto">
-              Contactanos
-            </a>
-            <a className="btn-hero1 links" href="/nosotros">
+            <Link className="btn-hero links" to="/contacto">
+              Contáctanos
+            </Link>
+            <Link className="btn-hero links" to="/nosotros">
               Nuestra Historia
-            </a>
+            </Link>
           </div>
 
           <div className="info_hero2">
