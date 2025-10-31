@@ -62,8 +62,6 @@ function reducer(state, action) {
 
 export function CartProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  // ... (el resto del archivo es idéntico) ...
   // LocalStorage
   useEffect(() => {
     try {

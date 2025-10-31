@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import '../styles/Products.css';
 
+// Variable de entorno para el despliegue
+// Lee la variable VITE_API_URL de Vercel/Vite. Usa localhost como fallback.
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
 const Products = () => {
-  // ... (el fetch y los useEffects están bien) ...
   const [products, setProducts] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [query, setQuery] = useState('');
@@ -20,11 +23,16 @@ const Products = () => {
         };
 
         let data;
+        let success = false;
+        
+        // CORRECCIÓN CLAVE: Intentar la ruta relativa primero, luego la absoluta.
         try {
           data = await tryFetch('/api/productos');
+          success = true;
         } catch {
-          // fallback to explicit backend host
-          data = await tryFetch('http://localhost:4000/api/productos');
+          // Fallback a la URL completa (para Vercel)
+          data = await tryFetch(`${API_URL}/api/productos`);
+          success = true;
         }
 
         setProducts(Array.isArray(data) ? data : []);
@@ -53,7 +61,6 @@ const Products = () => {
     const set = new Set(products.map((p) => p.tipo).filter(Boolean));
     return ['Todos', ...Array.from(set)];
   }, [products]);
-
 
   return (
     <main>
@@ -108,7 +115,7 @@ const Products = () => {
         ) : filtered.length === 0 ? (
           <p>No se encontraron productos</p>
         ) : (
-          //Usamos p._id (de Mongo) como key, en lugar de p.id
+          // Usamos p._id (de Mongo) como key
           filtered.map((p) => <ProductCard key={p._id || p.id} product={p} />)
         )}
       </div>

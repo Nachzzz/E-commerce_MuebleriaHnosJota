@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../styles/HeroBanner.css";
 
+// Variable de entorno para el despliegue
+// Lee la variable VITE_API_URL de Vercel/Vite. Usa localhost como fallback.
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
 const HeroBanner = () => {
   const [heroImg, setHeroImg] = useState("");
   const [loading, setLoading] = useState(true);
@@ -29,30 +33,36 @@ const HeroBanner = () => {
     const fetchHero = async () => {
       try {
         let p;
-        let data; // Declaramos data aquí
-        // Try the relative path first (works if backend is proxied or served from same origin)
+        let data;
+        
+        // CORRECCIÓN CLAVE: 
+        // 1. Intentamos la ruta relativa primero (funciona en local con proxy)
+        // 2. Si falla (como en Vercel), usamos la URL completa (API_URL)
+        
+        let success = false;
+        
+        // Intento 1: Ruta relativa (para desarrollo local sin VITE_API_URL)
         try {
-          // CORRECCIÓN 1: Pedimos TODOS los productos, no solo el ID "1"
           data = await fetchAsJson("/api/productos");
-          p = data[0]; // Seleccionamos el primer producto de la lista
+          success = true;
         } catch (err) {
-          // If relative fails (for example Vite serving index.html returns HTML), fall back to explicit backend host
-          try {
-            // CORRECCIÓN 1 (Fallback): Pedimos TODOS los productos
-            data = await fetchAsJson("http://localhost:4000/api/productos");
-            p = data[0]; // Seleccionamos el primer producto
-          } catch (err2) {
-            // Prefer the original error if it looks like HTML was returned (Unexpected token '<')
-            throw err2;
-          }
+          // Intento 2: Ruta absoluta usando la variable de entorno
+          data = await fetchAsJson(`${API_URL}/api/productos`);
+          success = true;
         }
 
-        // CORRECCIÓN 2: Usamos 'p.imagenUrl' (de MongoDB) en lugar de 'p.imagen'
-        if (p && p.imagenUrl && mounted) {
-          setHeroImg(p.imagenUrl);
-        } else if (p && p.imagen && mounted) {
-           // Fallback por si la URL de la imagen sigue estando en 'imagen'
-          setHeroImg(p.imagen);
+        if (success && data && Array.isArray(data) && data.length > 0) {
+          p = data[0]; // Seleccionamos el primer producto de la lista
+        
+          // Usamos 'p.imagenUrl' (de MongoDB) o el campo de fallback
+          if (p.imagenUrl && mounted) {
+            setHeroImg(p.imagenUrl);
+          } else if (p.imagen && mounted) {
+            setHeroImg(p.imagen);
+          }
+        } else {
+             // Si no hay productos, mostramos un error genérico
+             throw new Error("No se encontraron productos para el Hero Banner.");
         }
         
       } catch (err) {

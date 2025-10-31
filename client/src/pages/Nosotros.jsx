@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import '../styles/Nosotros.css';
 
+// Variable de entorno para el despliegue
+// Lee la variable VITE_API_URL de Vercel/Vite. Usa localhost como fallback.
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
 export default function Nosotros() {
 
     const [heroImg, setHeroImg] = useState("");
@@ -12,7 +16,7 @@ export default function Nosotros() {
     
         const fetchAsJson = async (url) => {
           const res = await fetch(url, { cache: "no-store" });
-          if (!res.ok) throw new Error(`API responded ${res.status}`);
+          if (!res.ok) throw new Error(`API responded ${res.status} when accessing ${url}`);
           const contentType = res.headers.get("content-type") || "";
           if (contentType.includes("application/json")) {
             return await res.json();
@@ -31,21 +35,38 @@ export default function Nosotros() {
           try {
             let p;
             let data;
+            
+            // CORRECCIÓN CLAVE: Determinamos la URL de la API.
+            const apiUrlPath = API_URL === 'http://localhost:4000' ? '/api/productos' : `${API_URL}/api/productos`;
+
+            // Intento 1: Llamada a la API
             try {
-              data = await fetchAsJson("/api/productos");
-              p = data[4];
+              data = await fetchAsJson(apiUrlPath);
             } catch (err) {
-              try {
-                data = await fetchAsJson("http://localhost:4000/api/productos");
-                p = data[4];
-              } catch (err2) {
-                throw err2;
-              }
+              // Si falla (ej: error CORS en local), intentamos la URL completa.
+              // En este caso, como apiUrlPath ya maneja el local/deploy, 
+              // si la primera falla, la segunda (que es igual) fallará también, 
+              // pero mantenemos la estructura de manejo de errores.
+              data = await fetchAsJson(`${API_URL}/api/productos`);
             }
     
-            if (p && p.imagenUrl && mounted) setHeroImg(p.imagenUrl);
+            if (data && Array.isArray(data) && data.length > 4) {
+              p = data[4]; // Seleccionamos el 5to producto (índice 4)
+            
+              // Usamos 'p.imagenUrl' (de MongoDB) con un fallback
+              const finalImage = p.imagenUrl || p.imagen;
+              
+              if (finalImage && mounted) {
+                setHeroImg(finalImage);
+              } else {
+                 throw new Error("Producto encontrado, pero la URL de la imagen está vacía.");
+              }
+            } else {
+                 throw new Error("La API no devolvió suficientes productos o falló la conexión.");
+            }
+            
           } catch (err) {
-            if (mounted) setError(err.message || "Error fetching hero image");
+            if (mounted) setError(err.message || "Error al obtener la imagen principal");
           } finally {
             if (mounted) setLoading(false);
           }
