@@ -30,20 +30,20 @@ export default function Nosotros() {
         const fetchHero = async () => {
           try {
             let p;
-            // Try the relative path first (works if backend is proxied or served from same origin)
+            let data;
             try {
-              p = await fetchAsJson("/api/productos/8");
+              data = await fetchAsJson("/api/productos");
+              p = data[4];
             } catch (err) {
-              // If relative fails (for example Vite serving index.html returns HTML), fall back to explicit backend host
               try {
-                p = await fetchAsJson("http://localhost:4000/api/productos/5");
+                data = await fetchAsJson("http://localhost:4000/api/productos");
+                p = data[4];
               } catch (err2) {
-                // Prefer the original error if it looks like HTML was returned (Unexpected token '<')
                 throw err2;
               }
             }
     
-            if (p && p.imagen && mounted) setHeroImg(p.imagen);
+            if (p && p.imagenUrl && mounted) setHeroImg(p.imagenUrl);
           } catch (err) {
             if (mounted) setError(err.message || "Error fetching hero image");
           } finally {

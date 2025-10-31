@@ -18,13 +18,15 @@ const FeaturedProducts = () => {
 
         let data;
         try {
-          data = await tryFetch('/api/productos/destacados');
+          // CORRECCIÓN 1: No existe /destacados. Llamamos a /productos
+          data = await tryFetch('/api/productos');
         } catch (err) {
           // fallback to explicit backend host
-          data = await tryFetch('http://localhost:4000/api/productos/destacados');
+          data = await tryFetch('http://localhost:4000/api/productos');
         }
 
-        setProducts(Array.isArray(data) ? data : []);
+        // CORRECCIÓN 2: Tomamos solo los 4 primeros como "destacados"
+        setProducts(Array.isArray(data) ? data.slice(0, 4) : []);
       } catch (err) {
         console.error('Error fetching featured products:', err);
         setError(err.message || 'Error fetching products');
@@ -41,6 +43,7 @@ const FeaturedProducts = () => {
 
   return (
     <section className="productos-destacados">
+      {/* ... (El div .info_productos está bien) ... */}
       <div className="info_productos">
         <h2>CADA PIEZA CUENTA UNA HISTORIA</h2>
         <h1 className="col_actual">Colección Actual</h1>
@@ -52,7 +55,8 @@ const FeaturedProducts = () => {
 
       <div className="placas-container" id="destacados-home">
         {products.map((p) => (
-          <ProductCard key={p.id} product={p} />
+          // CORRECCIÓN 3: Usamos p._id (de Mongo) como key
+          <ProductCard key={p._id || p.id} product={p} />
         ))}
       </div>
 

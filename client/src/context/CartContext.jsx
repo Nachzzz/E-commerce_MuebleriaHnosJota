@@ -15,18 +15,25 @@ function reducer(state, action) {
     case 'ADD': {
       const p = action.payload.product;
       const qty = action.payload.qty || 1;
-      const existing = state.items.find((i) => Number(i.id) === Number(p.id));
+      
+      // CORRECCIÓN: Usamos p._id (de Mongo) o p.id (del JSON viejo)
+      const productId = p._id || p.id;
+      
+      const existing = state.items.find((i) => i.id === productId);
+      
       let items;
       if (existing) {
         items = state.items.map((i) =>
-          Number(i.id) === Number(p.id) ? { ...i, quantity: i.quantity + qty } : i
+          i.id === productId ? { ...i, quantity: i.quantity + qty } : i
         );
       } else {
         const item = {
-          id: p.id,
+          // CORRECCIÓN: Guardamos el ID correcto
+          id: productId, 
           nombre: p.nombre,
           precio: p.precio,
-          imagen: p.imagen,
+          // CORRECCIÓN: Guardamos 'imagenUrl' en el campo 'imagen' del carrito
+          imagen: p.imagenUrl || p.imagen, 
           quantity: qty
         };
         items = [...state.items, item];
@@ -35,12 +42,14 @@ function reducer(state, action) {
     }
     case 'REMOVE': {
       const id = action.payload;
-      return { ...state, items: state.items.filter((i) => Number(i.id) !== Number(id)) };
+       // CORRECCIÓN: Comparamos con i.id (que ya guardamos como _id)
+      return { ...state, items: state.items.filter((i) => i.id !== id) };
     }
     case 'SET_QTY': {
       const { id, qty } = action.payload;
       const items = state.items.map((i) =>
-        Number(i.id) === Number(id) ? { ...i, quantity: Math.max(0, qty) } : i
+        // CORRECCIÓN: Comparamos con i.id
+        i.id === id ? { ...i, quantity: Math.max(0, qty) } : i
       ).filter(i => i.quantity > 0);
       return { ...state, items };
     }
@@ -54,6 +63,7 @@ function reducer(state, action) {
 export function CartProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // ... (el resto del archivo es idéntico) ...
   // LocalStorage
   useEffect(() => {
     try {

@@ -10,13 +10,15 @@ const ProductCard = ({ product }) => {
   const { show } = useContext(NotificationContext);
   if (!product) return null;
 
+  const productId = product._id;
+
   return (
     <article className="placa">
-      <img src={product.imagen} alt={product.nombre} />
+      <img src={product.imagenUrl} alt={product.nombre} />
       <h2 className="negro">{product.nombre}</h2>
       <h3 className="marron">${product.precio.toLocaleString()}</h3>
       <p className="descripcion">{product.descripcion}</p>
-  <Link className="btn-coleccion producto" to={`/producto/${product.id}`}>Ver</Link>
+  <Link className="btn-coleccion producto" to={`/productos/${productId}`}>Ver</Link>
   <button className="btn-carrito" onClick={() => { addToCart(product, 1); show(`Añadido: ${product.nombre}`); }} aria-label={`Agregar ${product.nombre} al carrito`}>Agregar al carrito</button>
     </article>
   );

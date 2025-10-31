@@ -1,7 +1,6 @@
 import React, { createContext, useCallback, useState, useEffect } from 'react';
 
-// Creamos un context para mejorar la UX del usuario, proporcionando 
-// notificaciones
+// Creamos un context para mejorar la UX del usuario, proporcionando notificaciones
 
 const NotificationContext = createContext({ show: (msg) => {} });
 
