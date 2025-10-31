@@ -3,7 +3,6 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 
 // Importamos el modelo de Producto
-// (Asegúrate de que la ruta a tu modelo sea correcta desde la carpeta 'routes')
 const Producto = require('../models/producto_model');
 
 /**
@@ -49,17 +48,17 @@ const validatePostProduct = [
  */
 const validatePutProduct = [
     body('nombre')
-        .optional() // <-- Esta es la corrección clave para PUT
+        .optional() // <-- Aplico una corrección clave para PUT
         .trim()
         .isLength({ min: 2 }).withMessage('El nombre debe tener al menos 2 caracteres.'),
     
     body('precio')
-        .optional() // <-- Corrección clave
+        .optional()
         .isNumeric().withMessage('El precio debe ser un valor numérico.')
         .isFloat({ gt: 0 }).withMessage('El precio debe ser mayor que 0.'),
     
     body('stock')
-        .optional() // <-- Corrección clave
+        .optional()
         .isNumeric().withMessage('El stock debe ser un número.')
         .isInt({ min: 0 }).withMessage('El stock no puede ser negativo.')
 ];
