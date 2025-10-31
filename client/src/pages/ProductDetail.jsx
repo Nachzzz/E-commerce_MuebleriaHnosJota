@@ -61,10 +61,15 @@ export default function ProductDetail() {
           <span key={i}>{i < (producto.valoracion ?? 5) ? '★' : '☆'}</span>
         ))}
       </div>
-      <img src={producto.imagen} alt={producto.nombre} className="detalle-imagen" />
+      
+      {/* CORRECCIÓN: 
+        Cambiamos 'producto.imagen' a 'producto.imagenUrl' 
+        para que coincida con el modelo de Mongoose.
+      */}
+      <img src={producto.imagenUrl} alt={producto.nombre} className="detalle-imagen" />
       
       <p>{producto.descripcion1}</p>
-      <p><strong>Precio:</strong> ${producto.precio}</p>
+      <p><strong>Precio:</strong> ${producto.precio.toLocaleString()}</p>
       {producto.material && <p><strong>Material:</strong> {producto.material}</p>}
       {producto.medidas && <p><strong>Medidas:</strong> {producto.medidas}</p>}
       {producto.acabado && <p><strong>Acabado:</strong> {producto.acabado}</p>}
@@ -74,3 +79,4 @@ export default function ProductDetail() {
     </main>
   );
 }
+

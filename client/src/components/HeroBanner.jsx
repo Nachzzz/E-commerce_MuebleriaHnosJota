@@ -29,20 +29,32 @@ const HeroBanner = () => {
     const fetchHero = async () => {
       try {
         let p;
+        let data; // Declaramos data aquí
         // Try the relative path first (works if backend is proxied or served from same origin)
         try {
-          p = await fetchAsJson("/api/productos/1");
+          // CORRECCIÓN 1: Pedimos TODOS los productos, no solo el ID "1"
+          data = await fetchAsJson("/api/productos");
+          p = data[0]; // Seleccionamos el primer producto de la lista
         } catch (err) {
           // If relative fails (for example Vite serving index.html returns HTML), fall back to explicit backend host
           try {
-            p = await fetchAsJson("http://localhost:4000/api/productos/1");
+            // CORRECCIÓN 1 (Fallback): Pedimos TODOS los productos
+            data = await fetchAsJson("http://localhost:4000/api/productos");
+            p = data[0]; // Seleccionamos el primer producto
           } catch (err2) {
             // Prefer the original error if it looks like HTML was returned (Unexpected token '<')
             throw err2;
           }
         }
 
-        if (p && p.imagen && mounted) setHeroImg(p.imagen);
+        // CORRECCIÓN 2: Usamos 'p.imagenUrl' (de MongoDB) en lugar de 'p.imagen'
+        if (p && p.imagenUrl && mounted) {
+          setHeroImg(p.imagenUrl);
+        } else if (p && p.imagen && mounted) {
+           // Fallback por si la URL de la imagen sigue estando en 'imagen'
+          setHeroImg(p.imagen);
+        }
+        
       } catch (err) {
         if (mounted) setError(err.message || "Error fetching hero image");
       } finally {

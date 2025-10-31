@@ -2,8 +2,10 @@
 
 .toasts-root {
   position: fixed;
-  right: 16px;
-  top: 16px;
+  bottom: 20px; /* Distancia desde abajo */
+  left: 50%; /* Centrado horizontal */
+  transform: translateX(-50%); /* Ajuste fino del centrado */
+  
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -11,17 +13,21 @@
 }
 
 .toast {
-  background: rgba(0,0,0,0.85);
+  background: var(--brand-verde-salvia, #87A96B);
   color: #fff;
-  padding: 10px 14px;
+  padding: 10px 16px; /* Un poco más de padding horizontal */
   border-radius: 8px;
-  min-width: 160px;
+  min-width: 180px; /* Ancho mínimo */
+  text-align: center; /* Centramos el texto */
   box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  transform-origin: top right;
+  transform-origin: bottom center;
   animation: toast-in 220ms ease;
 }
 
 @keyframes toast-in {
-  from { transform: translateY(-8px) scale(.98); opacity: 0; }
+  /* 
+     Hacemos que aparezca desde abajo en lugar de desde arriba.
+  */
+  from { transform: translateY(8px) scale(.98); opacity: 0; }
   to { transform: translateY(0) scale(1); opacity: 1; }
 }
