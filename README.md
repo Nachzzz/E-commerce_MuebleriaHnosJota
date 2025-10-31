@@ -6,9 +6,9 @@ El objetivo es una aplicación cliente-servidor completa que permite listar, cre
 
 ## 🚀 Enlaces de Despliegue
 
-Frontend (Vercel/Netlify):
+Frontend (Vercel/Netlify): https://e-commerce-muebleria-hnos-jota.vercel.app/
 
-Backend (Render):
+Backend (Render): https://muebleria-backend.onrender.com
 
 ---
 
