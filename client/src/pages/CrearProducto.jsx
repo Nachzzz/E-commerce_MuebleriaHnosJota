@@ -172,6 +172,18 @@ const CrearProducto = () => {
         </div>
 
         <div style={styles.formGroup}>
+          <label htmlFor="descripcion1" style={styles.label}>Descripción Larga</label>
+          <input
+            type="text"
+            id="descripcion1"
+            name="descripcion1"
+            value={formData.descripcion1}
+            onChange={handleChange}
+            style={styles.input}
+          />
+        </div>
+
+        <div style={styles.formGroup}>
           <label htmlFor="imagenUrl" style={styles.label}>URL de la Imagen</label>
           <input
             type="text"

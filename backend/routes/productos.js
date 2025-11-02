@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 
-// Importamos el modelo de Producto
+// aquí importamos el modelo de Producto
 const Producto = require('../models/producto_model');
 
 /**
@@ -48,7 +48,7 @@ const validatePostProduct = [
  */
 const validatePutProduct = [
     body('nombre')
-        .optional() // <-- Aplico una corrección clave para PUT
+        .optional()
         .trim()
         .isLength({ min: 2 }).withMessage('El nombre debe tener al menos 2 caracteres.'),
     
@@ -115,7 +115,7 @@ router.post('/',
             
             await nuevoProducto.save();
             
-            res.status(201).json(nuevoProducto); // 201 Created
+            res.status(201).json(nuevoProducto);
 
         } catch (err) {
             console.error(err.message);
@@ -129,8 +129,8 @@ router.post('/',
  * @desc    Recibe datos y modifica el producto en la base de datos.
  */
 router.put('/:id',
-    validatePutProduct,       // 1. Aplica reglas de PUT (opcionales)
-    handleValidationErrors,   // 2. Maneja errores de validación
+    validatePutProduct,
+    handleValidationErrors,
     async (req, res) => {
         try {
             // $set: req.body actualiza solo los campos que vienen en el body
@@ -145,7 +145,7 @@ router.put('/:id',
                 return res.status(404).json({ msg: 'Producto no encontrado.' });
             }
 
-            res.status(200).json(producto); // 200 OK
+            res.status(200).json(producto);
 
         } catch (err) {
             console.error(err.message);
@@ -181,5 +181,4 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-// Exportamos el router para que index.js pueda usarlo
 module.exports = router;
