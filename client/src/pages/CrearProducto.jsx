@@ -183,6 +183,45 @@ const CrearProducto = () => {
         </div>
 
         <div style={styles.formGroup}>
+          <label htmlFor="material" style={styles.label}>Material</label>
+          <input
+            type="text"
+            id="material"
+            name="material"
+            value={formData.material}
+            onChange={handleChange}
+            style={styles.input}
+            required
+          />
+        </div>
+
+        <div style={styles.formGroup}>
+          <label htmlFor="medidas" style={styles.label}>Medidas</label>
+          <input
+            type="text"
+            id="medidas"
+            name="medidas"
+            value={formData.medidas}
+            onChange={handleChange}
+            style={styles.input}
+            required
+          />
+        </div>
+
+        <div style={styles.formGroup}>
+          <label htmlFor="acabado" style={styles.label}>Acabado</label>
+          <input
+            type="text"
+            id="acabado"
+            name="acabado"
+            value={formData.acabado}
+            onChange={handleChange}
+            style={styles.input}
+            required
+          />
+        </div>
+
+        <div style={styles.formGroup}>
           <label htmlFor="imagenUrl" style={styles.label}>URL de la Imagen</label>
           <input
             type="text"
