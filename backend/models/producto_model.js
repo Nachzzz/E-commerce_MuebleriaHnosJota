@@ -1,14 +1,12 @@
 const mongoose = require('mongoose');
 
-// El nombre del esquema se usa en mayúscula inicial para convención
 const ProductoSchema = new mongoose.Schema({
     // --- CAMPOS BASE REQUERIDOS ---
     nombre: {
         type: String, 
         required: [true, 'El nombre del producto es obligatorio.'], 
-        // unique: true es útil si el nombre es la clave, pero puede dar problemas si hay variaciones ligeras. 
-        // Lo quito para flexibilidad a menos que sea un requisito de negocio.
-        trim: true // Quita espacios en blanco al inicio/final
+        // unique: true es útil si el nombre es la clave, pero puede dar problemas si hay variaciones ligeras.
+        trim: true // aquí quito espacios en blanco al inicio/final
     },
     descripcion: {
         type: String,
@@ -17,19 +15,19 @@ const ProductoSchema = new mongoose.Schema({
     precio: {
         type: Number, 
         required: [true, 'El precio es obligatorio.'],
-        min: [0, 'El precio no puede ser negativo.'] // Validacion estricta
+        min: [0, 'El precio no puede ser negativo.'] // validacion
     },
     stock: {
         type: Number,
         default: 0,
-        min: [0, 'El stock no puede ser negativo.'] // Validacion estricta
+        min: [0, 'El stock no puede ser negativo.'] // validacion
     },
     imagenUrl: {
         type: String,
         trim: true
     },
 
-    // --- CAMPOS ADICIONALES DE TU JSON ---
+    // --- CAMPOS ADICIONALES DEL JSON ---
     descripcion1: { // Usado para descripción larga
         type: String,
         trim: true
@@ -43,9 +41,9 @@ const ProductoSchema = new mongoose.Schema({
     material: String,
     acabado: String,
     medidas: String,
-    tiempo: String, // Tiempo de envío/fabricación
+    tiempo: String,
 }, {
-    timestamps: true // BUENA PRÁCTICA: Añade campos createdAt y updatedAt
+    timestamps: true // Añado campos createdAt y updatedAt para uso futuro
 });
 
 const Producto = mongoose.model('Producto', ProductoSchema, 'products');

@@ -96,10 +96,10 @@ const CrearProducto = () => {
         const errorMsg = data.errors ? data.errors[0].msg : (data.msg || 'Error al crear el producto.');
         throw new Error(errorMsg);
       }
-      
+
       setSuccess(`¡Producto "${data.nombre}" creado con éxito! Redirigiendo...`);
       setFormData({ nombre: '', descripcion: '', precio: 0, stock: 0, imagenUrl: '', tipo: '' });
-      
+
       // Redirigir al catálogo después de 2 segundos
       setTimeout(() => {
         navigate('/productos');
@@ -115,12 +115,11 @@ const CrearProducto = () => {
       <h2>Panel de Administración</h2>
       <h1>Crear Nuevo Producto</h1>
       <p>
-        Este formulario enviará los datos (hará un POST) al endpoint 
-        <code> /api/productos</code> para crear un nuevo ítem en la Base de Datos.
+        Este formulario enviará los datos para crear un nuevo ítem en el catálogo.
       </p>
 
       <form onSubmit={handleSubmit} style={styles.form}>
-        
+
         <div style={styles.formGroup}>
           <label htmlFor="nombre" style={styles.label}>Nombre del Producto *</label>
           <input
@@ -198,15 +197,23 @@ const CrearProducto = () => {
 
         <div style={styles.formGroup}>
           <label htmlFor="tipo" style={styles.label}>Categoría (Tipo)</label>
-          <input
-            type="text"
+          <select
             id="tipo"
             name="tipo"
             value={formData.tipo}
             onChange={handleChange}
             style={styles.input}
-            placeholder="Ej: Silla, Mesa"
-          />
+          >
+            <option value="" disabled>Selecciona una categoría</option>
+            <option value="Silla">Silla</option>
+            <option value="Mesa">Mesa</option>
+            <option value="Sofá">Sofá</option>
+            <option value="Cama">Cama</option>
+            <option value="Aparador">Aparador</option>
+            <option value="Escritorio">Escritorio</option>
+            <option value="Butaca">Butaca</option>
+            <option value="Otro">Otro</option>
+          </select>
         </div>
 
         <button type="submit" style={styles.button}>Guardar Producto</button>
