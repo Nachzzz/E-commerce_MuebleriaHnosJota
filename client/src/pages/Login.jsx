@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../context/AuthContext.jsx';
 import '../styles/Login.css';
+import { ArrowLeft, LogIn, Eye, EyeOff } from 'lucide-react';
 
-// En un entorno de desarrollo real, deberías importar SVGs o componentes de iconos (ej. lucide-react)
-const ArrowLeft = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>;
-const LogIn = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/></svg>;
-const Eye = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>;
-const EyeOff = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.51 10.51 2 12s3 7 10 7 10-7 10-7"/><path d="M12 5c2 0 4 1.33 5.5 3.5"/><path d="m2 2 20 20"/></svg>;
+
 const logoHermanosjota = '/logo.svg';
-// *****************************************************************
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
@@ -22,6 +19,7 @@ const Login = ({ onPageChange }) => {
     const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
     const [errors, setErrors] = useState({}); 
     const navigate = useNavigate()
+    const { login } = useAuthContext();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -72,8 +70,8 @@ const Login = ({ onPageChange }) => {
 
             const data = await response.json();
             
-            if (data.token) {
-                localStorage.setItem('userToken', data.token);
+            if (data.token && data.user) {
+                login(data.token, data.user);
                 setMessage('✅ ¡Inicio de sesión exitoso! Redireccionando...');
                 
                 setTimeout(() => {
@@ -106,7 +104,7 @@ const Login = ({ onPageChange }) => {
                 <div className="brand-panel">
                     <div className="brand-panel-content">
                         <img
-                            src="https://images.unsplash.com/photo-1633419946251-6d8b5dd33170?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjcmFmdHNtYW4lMjB3b29kJTIwd29ya3Nob3B8ZW58MXx8fHwxNzYyMjA2NTc0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+                            src="https://nachzzz.github.io/img_ecommerce/mesaDeNocheAconcagua.png"
                             alt="Taller Hermanos Jota"
                             className="brand-image"
                         />

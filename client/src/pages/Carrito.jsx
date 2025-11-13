@@ -1,11 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import CartContext from '../context/CartContext';
 import '../styles/Carrito.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../context/AuthContext';
 
 export default function Carrito() {
   const { cartItems, removeFromCart, setQuantity, totalCount, totalPrice, clearCart } = useContext(CartContext);
+  const { isLoggedIn } = useAuthContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
+
+  if (!isLoggedIn) {
+    return (
+      <main className='carrito'>
+        <p style={{ textAlign: 'center', padding: '2rem' }}>
+          Debes iniciar sesión para ver tu carrito. Redirigiendo...
+        </p>
+      </main>
+    );
+  }
 
   if (!cartItems || cartItems.length === 0) {
     return (

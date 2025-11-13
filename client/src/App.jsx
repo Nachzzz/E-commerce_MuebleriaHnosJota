@@ -12,6 +12,7 @@ import Registro from './pages/Registro.jsx'
 import Login from './pages/Login.jsx'
 import { CartProvider } from './context/CartContext'
 import { NotificationProvider } from './context/NotificationContext'
+import { AuthProvider } from './context/AuthContext.jsx'
 import './styles/toasts.css'
 import './App.css'
 
@@ -20,6 +21,7 @@ function App() {
   return (
     <NotificationProvider>
       <CartProvider>
+        <AuthProvider>
         <div className='layout'>
           <NavBar />
           <Routes>
@@ -34,10 +36,12 @@ function App() {
             <Route path="/admin/crear-producto" element={<CrearProducto />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/login" element={<Login />} />
+            {/* <Route path="/perfil" element={<p style={{margin: '3rem'}}>Página de Perfil del Usuario: {user?.username}</p>} /> */}
             <Route path="*" element={<Home />} />
           </Routes>
         </div>
         <Footer />
+        </AuthProvider>
       </CartProvider>
     </NotificationProvider>
   )
