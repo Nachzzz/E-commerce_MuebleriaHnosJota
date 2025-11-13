@@ -8,6 +8,8 @@ import Nosotros from './pages/Nosotros'
 import Contacto from './pages/Contacto'
 import Carrito from './pages/Carrito'
 import CrearProducto from './pages/CrearProducto' 
+import Registro from './pages/Registro.jsx'
+import Login from './pages/Login.jsx'
 import { CartProvider } from './context/CartContext'
 import { NotificationProvider } from './context/NotificationContext'
 import './styles/toasts.css'
@@ -30,6 +32,8 @@ function App() {
             <Route path="/carrito" element={<Carrito />} />
             {/* Nueva ruta de Admin añadida */}
             <Route path="/admin/crear-producto" element={<CrearProducto />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/login" element={<Login />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </div>
