@@ -123,6 +123,33 @@ nav.nav {
     font-size: 12px;
 }
 
+.nav-link-button {
+    /* Resetear estilos de botón por defecto */
+    background: transparent;
+    border: none;
+    padding: 6px 10px; /* Igual que los links */
+    margin: 0;
+    cursor: pointer;
+    font-size: 15px; /* Igual que los links */
+    font-family: var(--font-sans, sans-serif);
+    font-weight: 500;
+    text-decoration: none;
+    
+    /* Colores del link por defecto */
+    color: var(--brand-color-texto-gris, #6b6b6b);
+    border-radius: 6px;
+    transition: background 0.2s, color 0.2s;
+    
+    /* Para que funcione el padding/hover */
+    display: inline-block; 
+}
+
+/* Estilo de hover/focus igual que el link */
+.nav-link-button:hover {
+    background: #f4f4f4; 
+    color: var(--brand-siena-tostado, #A0522D);
+}
+
 /* Responsive */
 @media (max-width: 800px) {
     .menu-toggle { display: block; }

@@ -1,184 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const { body, validationResult } = require('express-validator');
 
-// aquí importamos el modelo de Producto
-const Producto = require('../models/producto_model');
+// Importar el controlador
+const productoController = require('../controllers/productoController');
 
-/**
- * Middleware de Ayuda:
- * Revisa si validationResult tuvo errores y responde si los hay.
- */
-const handleValidationErrors = (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ 
-            msg: "Error de validación de datos", 
-            errors: errors.array() 
-        });
-    }
-    // Si no hay errores, pasa al siguiente middleware (el controlador async)
-    next();
-};
-
-/**
- * Reglas de Validación para POST (Crear Producto)
- * Aquí los campos son obligatorios.
- */
-const validatePostProduct = [
-    body('nombre')
-        .trim()
-        .notEmpty().withMessage('El nombre es obligatorio.')
-        .isLength({ min: 2 }).withMessage('El nombre debe tener al menos 2 caracteres.'),
-    
-    body('precio')
-        .notEmpty().withMessage('El precio es obligatorio.')
-        .isNumeric().withMessage('El precio debe ser un valor numérico.')
-        .isFloat({ gt: 0 }).withMessage('El precio debe ser mayor que 0.'),
-    
-    body('stock')
-        .optional() // El stock es opcional al crear
-        .isNumeric().withMessage('El stock debe ser un número.')
-        .isInt({ min: 0 }).withMessage('El stock no puede ser negativo.')
-];
-
-/**
- * Reglas de Validación para PUT (Actualizar Producto)
- * Aquí todos los campos son opcionales.
- */
-const validatePutProduct = [
-    body('nombre')
-        .optional()
-        .trim()
-        .isLength({ min: 2 }).withMessage('El nombre debe tener al menos 2 caracteres.'),
-    
-    body('precio')
-        .optional()
-        .isNumeric().withMessage('El precio debe ser un valor numérico.')
-        .isFloat({ gt: 0 }).withMessage('El precio debe ser mayor que 0.'),
-    
-    body('stock')
-        .optional()
-        .isNumeric().withMessage('El stock debe ser un número.')
-        .isInt({ min: 0 }).withMessage('El stock no puede ser negativo.')
-];
-
+// Importar middlewares de validación
+const { 
+    handleValidationErrors, 
+    validatePostProduct, 
+    validatePutProduct 
+} = require('../middlewares/productValidator');
 
 // --- DEFINICIÓN DE ENDPOINTS CRUD ---
 
-/**
- * @route   GET /api/productos
- * @desc    Devuelve todos los productos de la colección.
- */
-router.get('/', async (req, res) => {
-    try {
-        const productos = await Producto.find({});
-        res.json(productos);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ msg: 'Error del servidor al obtener productos.' });
-    }
-});
+router.get('/', productoController.getProductos);
 
-/**
- * @route   GET /api/productos/:id
- * @desc    Devuelve un único producto por su _id.
- */
-router.get('/:id', async (req, res) => {
-    try {
-        const producto = await Producto.findById(req.params.id);
-        if (!producto) {
-            return res.status(404).json({ msg: 'Producto no encontrado.' });
-        }
-        res.json(producto);
-    } catch (err) {
-        console.error(err.message);
-        // Manejo de error si el ID tiene un formato inválido
-        if (err.kind === 'ObjectId') {
-            return res.status(404).json({ msg: 'Producto no encontrado (ID mal formado).' });
-        }
-        res.status(500).json({ msg: 'Error del servidor.' });
-    }
-});
+router.get('/:id', productoController.getProductoById);
 
-/**
- * @route   POST /api/productos
- * @desc    Crea un nuevo documento en la base de datos.
- */
 router.post('/',
-    validatePostProduct,      // 1. Aplica reglas de POST
-    handleValidationErrors,   // 2. Maneja errores de validación
-    async (req, res) => {
-        try {
-            // req.body ya fue validado
-            const nuevoProducto = new Producto(req.body);
-            
-            await nuevoProducto.save();
-            
-            res.status(201).json(nuevoProducto);
-
-        } catch (err) {
-            console.error(err.message);
-            res.status(500).json({ msg: 'Error del servidor al crear el producto.' });
-        }
-    }
+    validatePostProduct,
+    handleValidationErrors,
+    productoController.createProducto
 );
 
-/**
- * @route   PUT /api/productos/:id
- * @desc    Recibe datos y modifica el producto en la base de datos.
- */
 router.put('/:id',
     validatePutProduct,
     handleValidationErrors,
-    async (req, res) => {
-        try {
-            // $set: req.body actualiza solo los campos que vienen en el body
-            // new: true devuelve el documento modificado
-            const producto = await Producto.findByIdAndUpdate(
-                req.params.id,
-                { $set: req.body },
-                { new: true, runValidators: true } 
-            );
-
-            if (!producto) {
-                return res.status(404).json({ msg: 'Producto no encontrado.' });
-            }
-
-            res.status(200).json(producto);
-
-        } catch (err) {
-            console.error(err.message);
-            if (err.kind === 'ObjectId') {
-                return res.status(404).json({ msg: 'Producto no encontrado (ID mal formado).' });
-            }
-            res.status(500).json({ msg: 'Error del servidor al actualizar.' });
-        }
-    }
+    productoController.updateProducto
 );
 
-/**
- * @route   DELETE /api/productos/:id
- * @desc    Elimina un producto de la base de datos por su _id.
- */
-router.delete('/:id', async (req, res) => {
-    try {
-        const producto = await Producto.findByIdAndDelete(req.params.id);
-
-        if (!producto) {
-            return res.status(404).json({ msg: 'Producto no encontrado.' });
-        }
-
-        res.status(200).json({ msg: 'Producto eliminado correctamente.' });
-
-    } catch (err) {
-        console.error(err.message);
-        if (err.kind === 'ObjectId') {
-            return res.status(404).json({ msg: 'Producto no encontrado (ID mal formado).' });
-        }
-        res.status(500).json({ msg: 'Error del servidor al eliminar.' });
-    }
-});
+router.delete('/:id', productoController.deleteProducto);
 
 
 module.exports = router;

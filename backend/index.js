@@ -44,8 +44,6 @@ app.use(express.json());
 // Llamada a la ruta de productos (ya usa /api)
 app.use('/api/productos', productosRouter);
 
-// ⚠️ CAMBIO CRUCIAL: Llamada a la ruta de usuarios con prefijo API
-// Ahora, la ruta completa para el registro es /api/usuarios/registro
 app.use('/api/usuarios', userRoutes); 
 
 // Serve client public if needed (optional)
