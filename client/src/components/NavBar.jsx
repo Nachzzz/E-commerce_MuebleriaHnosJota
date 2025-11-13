@@ -40,6 +40,9 @@ const NavBar = () => {
             <Link to="/contacto">Contacto</Link>
           </li>
           <li>
+            <Link to="/login">Ingresar</Link>
+          </li>
+          <li>
             <button
               className="carrito-btn"
               aria-label={`Ver carrito, ${totalCount} items`}
