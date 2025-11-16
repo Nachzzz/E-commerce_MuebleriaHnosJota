@@ -2,50 +2,78 @@ import "../styles/NavBar.css";
 import { useState, useContext } from "react";
 import { Link, useNavigate } from 'react-router-dom'
 import carritoIcon from '/carrito.svg'
+import carritoIconWhite from '/carrito_blanco.svg'
 import CartContext from '../context/CartContext'
 import { useAuthContext } from '../context/AuthContext'
-import { UserIcon } from 'lucide-react';
+import { User, LogOut, Package, Heart, Settings } from 'lucide-react'; 
 
-// Icono de usuario para el Perfil
 
 const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false); // Estado para el menú desplegable
   const { totalCount } = useContext(CartContext) || { totalCount: 0 };
   
-  // 2. Usar el contexto de autenticación
   const { isLoggedIn, user, logout } = useAuthContext();
   const navigate = useNavigate()
+
+  //funcion para cambiar el img del carrito cuando paso el cursor por encima
+  const [isHovered, setIsHovered] = useState(false);
 
   // Función para cerrar sesión y redirigir
   const handleLogout = () => {
     logout();
-    setMenuOpen(false); // Cierra el menú en móvil
+    setDropdownOpen(false);
+    setMenuOpen(false); 
     navigate('/');
+  }
+
+  // Función para alternar el dropdown y cerrar el menú móvil si está abierto
+  const toggleDropdown = () => {
+    setDropdownOpen(v => !v);
+    if (menuOpen) setMenuOpen(false);
   }
 
   // Elemento condicional para el botón de autenticación
   const AuthButtons = isLoggedIn ? (
-    <>
-      <li>
-        {/* Muestra el nombre de usuario o "Perfil" */}
-        <Link to="/perfil" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <UserIcon />
-            {user?.username || 'Perfil'} 
-        </Link>
-      </li>
-      <li>
-        {/* Botón de Cerrar Sesión */}
+    <li className="profile-dropdown-container">
         <button
-          onClick={handleLogout}
-          className="nav-link-button" // Usaremos una clase para estilizarlo como link
+            onClick={toggleDropdown}
+            className={`profile-btn ${dropdownOpen ? 'active' : ''}`}
+            aria-label={`Ver perfil de ${user?.username || 'Usuario'}`}
         >
-          Cerrar Sesión
+            <User size={18} />
+            {user?.username || 'Perfil'} 
         </button>
-      </li>
-    </>
+
+        {/* Menú Desplegable */}
+        {dropdownOpen && (
+            <div className="profile-dropdown-menu">
+                <div className="user-info-header">
+                    <p className="user-name-text">{user?.username}</p>
+                    <p className="user-email-text">{user?.email}</p>
+                </div>
+
+                <Link to="/perfil" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    <User size={18} /> Mi Perfil
+                </Link>
+                <Link to="/pedidos" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    <Package size={18} /> Mis Pedidos
+                </Link>
+                <Link to="/favoritos" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    <Heart size={18} /> Favoritos
+                </Link>
+                <Link to="/configuracion" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+                    <Settings size={18} /> Configuración
+                </Link>
+
+                <button onClick={handleLogout} className="dropdown-item logout-btn">
+                    <LogOut size={18} /> Cerrar Sesión
+                </button>
+            </div>
+        )}
+    </li>
   ) : (
-    <li>
-      {/* Link de Ingresar */}
+    <li className="btn-ingresar">
       <Link to="/login" onClick={() => setMenuOpen(false)}>Ingresar</Link>
     </li>
   );
@@ -81,15 +109,18 @@ const NavBar = () => {
           <li>
             <Link to="/contacto" onClick={() => setMenuOpen(false)}>Contacto</Link>
           </li>
-          {/* Renderizado Condicional aquí */}
+          
           {AuthButtons} 
+          
           <li>
             <button
               className="carrito-btn"
               aria-label={`Ver carrito, ${totalCount} items`}
               onClick={() => { navigate('/carrito'); setMenuOpen(false); }}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
             >
-              <img src={carritoIcon} alt="Carrito" className="carrito-icon" />
+              <img src={isHovered ? carritoIconWhite : carritoIcon} alt="Carrito" className="carrito-icon" />
               <span className="contador-carrito">{totalCount}</span>
             </button>
           </li>

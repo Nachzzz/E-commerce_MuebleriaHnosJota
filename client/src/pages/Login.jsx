@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext.jsx';
 import '../styles/Login.css';
 import { ArrowLeft, LogIn, Eye, EyeOff } from 'lucide-react';
@@ -14,12 +14,13 @@ const Login = ({ onPageChange }) => {
         email: '',
         password: '',
     });
-    const [isLoading, setIsLoading] = useState(false); // cambio de 'loading' a 'isLoading' para coincidir con la plantilla
+    const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState(''); // Mensaje de éxito/error
     const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar contraseña
     const [errors, setErrors] = useState({}); 
     const navigate = useNavigate()
     const { login } = useAuthContext();
+    const location = useLocation();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -30,7 +31,7 @@ const Login = ({ onPageChange }) => {
     const validate = () => {
         let tempErrors = {};
         if (!formData.email) tempErrors.email = 'El correo electrónico es requerido';
-        // Validación simple para el email, ya que en el código original se usa `pattern`
+        // Validación simple para el email
         else if (!/\S+@\S+\.\S+/.test(formData.email)) tempErrors.email = 'Correo electrónico inválido'; 
 
         if (!formData.password) tempErrors.password = 'La contraseña es requerida';
@@ -73,9 +74,10 @@ const Login = ({ onPageChange }) => {
             if (data.token && data.user) {
                 login(data.token, data.user);
                 setMessage('✅ ¡Inicio de sesión exitoso! Redireccionando...');
-                
+                const redirectTo = location.state?.from || '/';
                 setTimeout(() => {
-                    window.location.href = '/'; 
+                    navigate(redirectTo);
+                    // window.location.href = '/'; 
                 }, 1000);
 
             } else {
@@ -90,12 +92,12 @@ const Login = ({ onPageChange }) => {
         }
     }
     
-    // Función de ejemplo para simular la navegación entre páginas
-    const handlePageChange = (page) => {
-        console.log(`Navegando a: ${page}`);
-        // Implementar lógica de navegación real (ej. router.push)
-        if (onPageChange) onPageChange(page);
-    };
+    // // Función de ejemplo para simular la navegación entre páginas
+    // const handlePageChange = (page) => {
+    //     console.log(`Navegando a: ${page}`);
+    //     // Implementar lógica de navegación real (ej. router.push)
+    //     if (onPageChange) onPageChange(page);
+    // };
 
     return (
         <div className="login-container">
