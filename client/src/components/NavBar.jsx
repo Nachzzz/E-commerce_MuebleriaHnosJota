@@ -56,7 +56,7 @@ const NavBar = () => {
           <Link to="/perfil" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
             <CircleUser size={18} /> Mi Perfil
           </Link>
-          <Link to="/pedidos" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
+          {/* <Link to="/pedidos" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
             <Package size={18} /> Mis Pedidos
           </Link>
           <Link to="/favoritos" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
@@ -64,7 +64,7 @@ const NavBar = () => {
           </Link>
           <Link to="/configuracion" className="dropdown-item" onClick={() => setDropdownOpen(false)}>
             <Settings size={18} /> Configuración
-          </Link>
+          </Link> */}
 
           <button onClick={handleLogout} className="dropdown-item logout-btn">
             <LogOut size={18} /> Cerrar Sesión
