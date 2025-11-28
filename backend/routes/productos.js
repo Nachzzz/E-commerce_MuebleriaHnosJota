@@ -1,16 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const productoController = require('../controllers/productoController');
-const { verifyToken, verifyAdmin } = require('../middlewares/auth'); // <--- Importar
-const { 
-    handleValidationErrors, 
-    validatePostProduct, 
-    validatePutProduct 
+const { verifyToken, verifyAdmin } = require('../middlewares/auth');
+const {
+    handleValidationErrors,
+    validatePostProduct,
+    validatePutProduct
 } = require('../middlewares/productValidator');
 
 // Rutas Públicas
 router.get('/', productoController.getProductos);
 router.get('/:id', productoController.getProductoById);
+router.get('/:id/reviews', productoController.getProductReviews);
 
 // Rutas Privadas (Solo Admin)
 router.post('/',
@@ -21,6 +22,8 @@ router.post('/',
     productoController.createProducto
 );
 
+router.post('/:id/reviews', verifyToken, productoController.createProductReview);
+
 router.put('/:id',
     verifyToken,
     verifyAdmin,
@@ -29,7 +32,7 @@ router.put('/:id',
     productoController.updateProducto
 );
 
-router.delete('/:id', 
+router.delete('/:id',
     verifyToken,
     verifyAdmin,
     productoController.deleteProducto

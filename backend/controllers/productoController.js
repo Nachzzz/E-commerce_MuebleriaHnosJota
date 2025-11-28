@@ -1,5 +1,5 @@
-// backend/controllers/productoController.js
 const Producto = require('../models/producto_model');
+const Review = require('../models/review_model');
 
 /**
  * @desc    Devuelve todos los productos de la colección.
@@ -103,5 +103,73 @@ exports.deleteProducto = async (req, res) => {
             return res.status(404).json({ msg: 'Producto no encontrado (ID mal formado).' });
         }
         res.status(500).json({ msg: 'Error del servidor al eliminar.' });
+    }
+};
+
+/**
+ * @desc    Crear una nueva reseña
+ * @route   POST /api/productos/:id/reviews
+ */
+exports.createProductReview = async (req, res) => {
+    const { rating, comment } = req.body;
+    const productId = req.params.id;
+
+    try {
+        const product = await Producto.findById(productId);
+        if (!product) {
+            return res.status(404).json({ msg: 'Producto no encontrado' });
+        }
+
+        // Verificar si ya comentó
+        const alreadyReviewed = await Review.findOne({
+            user: req.user.id,
+            product: productId
+        });
+
+        if (alreadyReviewed) {
+            return res.status(400).json({ msg: 'Ya has valorado este producto' });
+        }
+
+        // Crear reseña
+        const review = new Review({
+            user: req.user.id,
+            username: req.user.username, // Asumimos que viene en el token o lo buscamos
+            product: productId,
+            rating: Number(rating),
+            comment
+        });
+
+        await review.save();
+
+        // RE-CALCULAR PROMEDIO
+        // Buscamos todas las reviews de este producto
+        const reviews = await Review.find({ product: productId });
+        
+        // Calcular promedio
+        const avg = reviews.reduce((acc, item) => item.rating + acc, 0) / reviews.length;
+
+        // Actualizar producto
+        product.valoracion = avg;
+        // Opcional: product.numReviews = reviews.length;
+        await product.save();
+
+        res.status(201).json({ msg: 'Reseña agregada' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error al guardar la reseña' });
+    }
+};
+
+/**
+ * @desc    Obtener reseñas de un producto
+ * @route   GET /api/productos/:id/reviews
+ */
+exports.getProductReviews = async (req, res) => {
+    try {
+        const reviews = await Review.find({ product: req.params.id }).sort({ createdAt: -1 });
+        res.json(reviews);
+    } catch (error) {
+        res.status(500).json({ msg: 'Error al obtener reseñas' });
     }
 };

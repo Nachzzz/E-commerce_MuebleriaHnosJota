@@ -1,32 +1,44 @@
 const Order = require('../models/order_model');
+const Producto = require('../models/producto_model');
 
-/**
- * @desc    Crear una nueva orden
- * @route   POST /api/orders
- * @access  Private (Solo usuarios logueados)
- */
 exports.createOrder = async (req, res) => {
     try {
         const { items, shippingDetails, totalAmount } = req.body;
 
-        // 1. Validaciones básicas
         if (!items || items.length === 0) {
             return res.status(400).json({ message: 'No hay ítems en la orden' });
         }
 
-        // 2. Crear la orden en memoria
-        // Usamos req.user.id que viene del middleware verifyToken
+        // VERIFICACIÓN DE STOCK (Paso crítico antes de procesar)
+        for (const item of items) {
+            const productDB = await Producto.findById(item.producto);
+            if (!productDB) {
+                return res.status(404).json({ message: `Producto no encontrado: ${item.nombre}` });
+            }
+            if (productDB.stock < item.cantidad) {
+                return res.status(400).json({ 
+                    message: `Stock insuficiente para ${productDB.nombre}. Disponible: ${productDB.stock}` 
+                });
+            }
+        }
+
+        // DESCONTAR STOCK (Solo si la validación anterior pasó)
+        for (const item of items) {
+            await Producto.findByIdAndUpdate(item.producto, {
+                $inc: { stock: -item.cantidad } // $inc con negativo resta
+            });
+        }
+
+        // Crea la orden
         const newOrder = new Order({
             user: req.user.id, 
             items,
             shippingDetails,
             totalAmount,
-            status: 'paid' // Simulamos que el pago fue exitoso en el frontend
+            status: 'paid'
         });
 
-        // 3. Guardar en MongoDB
         const savedOrder = await newOrder.save();
-
         res.status(201).json(savedOrder);
 
     } catch (error) {
