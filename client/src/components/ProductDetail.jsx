@@ -5,8 +5,6 @@ import '../styles/ProductDetail.css';
 import CartContext from '../context/CartContext';
 import NotificationContext from '../context/NotificationContext';
 
-// Variable de entorno para el despliegue
-// Lee la variable VITE_API_URL de Vercel/Vite. Usa localhost como fallback.
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 export default function ProductDetail() {
@@ -17,7 +15,6 @@ export default function ProductDetail() {
   const { addToCart } = useContext(CartContext);
   const { show } = useContext(NotificationContext);
 
-  // 1. Nuevo estado para manejar la confirmación de borrado
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -31,11 +28,9 @@ export default function ProductDetail() {
 
         let data;
         
-        // CORRECCIÓN 1: Usamos API_URL en la llamada de Fetch
         try {
           data = await tryFetch(`${API_URL}/api/productos/${id}`);
         } catch (err) {
-          // Si falla, el tryFetch ya usó el fallback de la propia API_URL
           console.error("Error en la llamada a la API:", err);
           data = null;
         }
@@ -57,10 +52,8 @@ export default function ProductDetail() {
     show(`Añadido: ${p.nombre}`);
   };
 
-  // 2. Nueva función para manejar el borrado
   const handleConfirmDelete = async () => {
     try {
-      // CORRECCIÓN 2: Usamos API_URL en la llamada DELETE
       const response = await fetch(`${API_URL}/api/productos/${id}`, {
         method: 'DELETE',
       });
@@ -70,13 +63,12 @@ export default function ProductDetail() {
       }
 
       show('Producto eliminado correctamente.');
-      // Redirigir al catálogo después del borrado
       navigate('/productos');
 
     } catch (err) {
       console.error('Error al eliminar:', err);
       show('Error al eliminar el producto.');
-      setIsDeleting(false); // Ocultar confirmación si falla
+      setIsDeleting(false);
     }
   };
 
@@ -95,7 +87,6 @@ export default function ProductDetail() {
         ))}
       </div>
       
-      {/* Usamos 'imagenUrl' (de Mongo) */}
       <img src={producto.imagenUrl} alt={producto.nombre} className="detalle-imagen" />
       
       <p>{producto.descripcion1}</p>
@@ -107,15 +98,13 @@ export default function ProductDetail() {
 
       <button className="btn-primary" onClick={() => handleAddToCart(producto)}>🛒 Añadir al Carrito</button>
 
-      {/* 3. Nuevos elementos JSX para el borrado y confirmación */}
+      {/* Nuevos elementos JSX para el borrado y confirmación */}
       <div className="admin-actions">
         {!isDeleting ? (
-          // Botón principal de Eliminar
           <button className="btn-danger" onClick={() => setIsDeleting(true)}>
             Eliminar Producto (Admin)
           </button>
         ) : (
-          // Diálogo de confirmación
           <div className="confirmation-dialog">
             <p>¿Estás seguro de que quieres eliminar este producto?</p>
             <button className="btn-danger" onClick={handleConfirmDelete}>
