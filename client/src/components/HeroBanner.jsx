@@ -35,13 +35,13 @@ const HeroBanner = () => {
       try {
         let p;
         let data;
-        
+
         // CORRECCIÓN CLAVE: 
         // 1. Intentamos la ruta relativa primero (funciona en local con proxy)
         // 2. Si falla (como en Vercel), usamos la URL completa (API_URL)
-        
+
         let success = false;
-        
+
         // Intento 1: Ruta relativa (para desarrollo local sin VITE_API_URL)
         try {
           data = await fetchAsJson("/api/productos");
@@ -54,7 +54,7 @@ const HeroBanner = () => {
 
         if (success && data && Array.isArray(data) && data.length > 0) {
           p = data[0]; // Seleccionamos el primer producto de la lista
-        
+
           // Usamos 'p.imagenUrl' (de MongoDB) o el campo de fallback
           if (p.imagenUrl && mounted) {
             setHeroImg(p.imagenUrl);
@@ -62,10 +62,10 @@ const HeroBanner = () => {
             setHeroImg(p.imagen);
           }
         } else {
-             // Si no hay productos, mostramos un error genérico
-             throw new Error("No se encontraron productos para el Hero Banner.");
+          // Si no hay productos, mostramos un error genérico
+          throw new Error("No se encontraron productos para el Hero Banner.");
         }
-        
+
       } catch (err) {
         if (mounted) setError(err.message || "Error fetching hero image");
       } finally {
@@ -80,6 +80,20 @@ const HeroBanner = () => {
     };
   }, []);
 
+  const imageContent = (
+    <>
+      {loading ? (
+        <div>Loading image...</div>
+      ) : error ? (
+        <div>Error: {error}</div>
+      ) : heroImg ? (
+        <img src={heroImg} alt="Muebles de Madera de Autor" />
+      ) : (
+        <div>Imagen no disponible</div>
+      )}
+    </>
+  );
+
   return (
     <main>
       <section className="hero-banner">
@@ -89,6 +103,11 @@ const HeroBanner = () => {
             Muebles que <br />
             <span style={{ color: "#A0522D" }}>Alimentan el alma</span>
           </h1>
+
+          <div className="img_hero mobile-only">
+            {imageContent}
+          </div>
+
           <p>
             Existimos en la intersección entre herencia e innovación,
             <br /> donde la calidez del optimismo de los años 60 se encuentra
@@ -120,17 +139,10 @@ const HeroBanner = () => {
           </div>
         </div>
 
-        <div className="img_hero">
-          {loading ? (
-            <div>Loading image...</div>
-          ) : error ? (
-            <div>Error cargando imagen: {error}</div>
-          ) : heroImg ? (
-            <img src={heroImg} alt="Muebles de Madera de Autor" />
-          ) : (
-            <div>Imagen no disponible</div>
-          )}
+        <div className="img_hero desktop-only">
+          {imageContent}
         </div>
+
       </section>
     </main>
   );

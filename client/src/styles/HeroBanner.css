@@ -71,7 +71,6 @@
 }
 
 .info_hero h1 {
-    color: black;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -128,6 +127,7 @@
         text-align: center;
         gap: 24px;
         min-height: auto;
+        padding: 25% 5%;
     }
 
     .info_hero {
@@ -138,17 +138,51 @@
         text-align: center;
     }
 
-    .info_hero h1 {
-        font-size: 2em;
-    }
-
     .info_hero2 {
-        flex-direction: column;
-        gap: 18px;
+        gap: 10px;
         align-items: center;
     }
 
     .info_hero2-item {
         min-width: 0;
+    }
+
+    .div-btn {
+    display: flex;
+    gap: 12px;
+    flex-wrap: nowrap
+    }
+}
+
+/* --- LÓGICA DE VISIBILIDAD DE IMAGEN --- */
+
+.img_hero.mobile-only {
+    display: none;
+}
+
+.img_hero.desktop-only {
+    display: flex;
+}
+
+@media (max-width: 800px) { 
+    
+
+    .img_hero.mobile-only {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+        width: 100%;
+    }
+
+
+    .img_hero.desktop-only {
+        display: none;
+    }
+
+
+    .img_hero.mobile-only img {
+        max-height: 300px;
+        width: auto;
+        max-width: 100%;
     }
 }
