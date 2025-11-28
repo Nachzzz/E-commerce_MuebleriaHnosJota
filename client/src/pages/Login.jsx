@@ -145,13 +145,14 @@ const Login = ({ onPageChange }) => {
 
                     <div className="Card">
                         <div className="CardHeader">
-                            <div className="logo-mobile-wrapper">
+                            {/* Arreglo error de la Card, la imagen daba bugs */}
+                            {/* <div className="logo-mobile-wrapper">
                                 <img
                                     src={logoHermanosjota}
                                     alt="Hermanos Jota"
                                     className="h-12 w-auto"
                                 />
-                            </div>
+                            </div> */}
                             <h2 className="CardTitle">
                                 Iniciar Sesión
                             </h2>
