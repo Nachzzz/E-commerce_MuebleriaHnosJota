@@ -15,9 +15,11 @@ import { NotificationProvider } from './context/NotificationContext'
 import { AuthProvider } from './context/AuthContext.jsx'
 import './styles/toasts.css'
 import './App.css'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
+import Checkout from './pages/Checkout'
+import Perfil from './pages/Perfil.jsx'
 
 function App() {
-
   return (
     <NotificationProvider>
       <CartProvider>
@@ -25,18 +27,24 @@ function App() {
         <div className='layout'>
           <NavBar />
           <Routes>
+            {/* Rutas Públicas */}
             <Route path="/" element={<Home />} />
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/nosotros" element={<Nosotros />} />
             <Route path="/productos" element={<Products />} />
-            {/* Ruta corregida a plural */}
             <Route path="/productos/:id" element={<ProductDetail />} />
             <Route path="/carrito" element={<Carrito />} />
-            {/* Nueva ruta de Admin añadida */}
-            <Route path="/admin/crear-producto" element={<CrearProducto />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/login" element={<Login />} />
-            {/* <Route path="/perfil" element={<p style={{margin: '3rem'}}>Página de Perfil del Usuario: {user?.username}</p>} /> */}
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/perfil" element={<Perfil />} />
+
+            {/* Rutas Protegidas - Solo para administradores */}
+            <Route element={<ProtectedRoute requiredRole="admin" />}>
+                <Route path="/admin/crear-producto" element={<CrearProducto />} />
+                <Route path="/admin/editar-producto/:id" element={<CrearProducto />} />
+            </Route>
+
             <Route path="*" element={<Home />} />
           </Routes>
         </div>
@@ -46,6 +54,4 @@ function App() {
     </NotificationProvider>
   )
 }
-
 export default App
-

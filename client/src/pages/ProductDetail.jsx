@@ -4,6 +4,8 @@ import '../styles/Products.css';
 import '../styles/ProductDetail.css';
 import CartContext from '../context/CartContext';
 import NotificationContext from '../context/NotificationContext';
+// Importamos AuthContext para condicionales de renderizado
+import { useAuthContext } from '../context/AuthContext';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
@@ -14,35 +16,24 @@ export default function ProductDetail() {
   const navigate = useNavigate();
   const { addToCart } = useContext(CartContext);
   const { show } = useContext(NotificationContext);
-
-  // 1. Nuevo estado para manejar la confirmación de borrado
+  
+  // Obtenemos user para saber si mostrar el botón
+  const { user } = useAuthContext(); 
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      try {
-        const tryFetch = async (url) => {
-          const r = await fetch(url, { cache: 'no-store' });
-          if (!r.ok) throw new Error(`API responded ${r.status}`);
-          return await r.json();
-        };
-
-        let data;
         try {
-          data = await tryFetch(`/api/productos/${id}`);
+            const res = await fetch(`${API_URL}/api/productos/${id}`);
+            if (!res.ok) throw new Error('Error al cargar producto');
+            const data = await res.json();
+            setProducto(data);
         } catch (err) {
-          data = await tryFetch(`${API_URL}/api/productos/${id}`);
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
-
-        setProducto(data);
-      } catch (err) {
-        console.error('Error fetching product', err);
-        setProducto(null);
-      } finally {
-        setLoading(false);
-      }
     };
-
     fetchProduct();
   }, [id]);
 
@@ -51,28 +42,43 @@ export default function ProductDetail() {
     show(`Añadido: ${p.nombre}`);
   };
 
-  // 2. Nueva función para manejar el borrado
   const handleConfirmDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/api/productos/${id}`, {
+      // 1. LEER TOKEN DIRECTAMENTE DE LOCALSTORAGE (Infalible)
+      const storedToken = localStorage.getItem('userToken');
+
+      // Debug para verificar en consola
+      console.log("Token recuperado de localStorage:", storedToken);
+
+      if (!storedToken) {
+        show("Sesión expirada. Por favor, inicia sesión.");
+        navigate('/login');
+        return;
+      }
+
+      const response = await fetch(`${API_URL}/api/productos/${id}`, {
         method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            // 2. Enviamos el header Authorization correctamente
+            'Authorization': `Bearer ${storedToken}` 
+        }
       });
 
       if (!response.ok) {
-        throw new Error('No se pudo eliminar el producto.');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Error ${response.status}: No se pudo eliminar.`);
       }
 
       show('Producto eliminado correctamente.');
-      // Redirigir al catálogo después del borrado
       navigate('/productos');
 
     } catch (err) {
       console.error('Error al eliminar:', err);
-      show('Error al eliminar el producto.');
-      setIsDeleting(false); // Ocultar confirmación si falla
+      show(`Error: ${err.message}`);
+      setIsDeleting(false);
     }
   };
-
 
   if (loading) return <p>Cargando...</p>;
   if (!producto) return <p>Producto no encontrado.</p>;
@@ -81,18 +87,11 @@ export default function ProductDetail() {
     <main className="product-detail">
       <button onClick={() => navigate('/productos')}>⬅ Volver al catálogo</button>
       <h1>{producto.nombre}</h1>
-      <div className="valoracion-estrellas">
-        <h2>Valoracion</h2>
-        {Array.from({ length: 5 }, (_, i) => (
-          <span key={i}>{i < (producto.valoracion ?? 5) ? '★' : '☆'}</span>
-        ))}
-      </div>
       
-      {/* Usamos 'imagenUrl' (de Mongo) */}
-      <img src={producto.imagenUrl} alt={producto.nombre} className="detalle-imagen" />
+      <img src={producto.imagenUrl || producto.imagen} alt={producto.nombre} className="detalle-imagen" />
       
-      <p>{producto.descripcion1}</p>
-      <p><strong>Precio:</strong> ${producto.precio.toLocaleString()}</p>
+      <p>{producto.descripcion1 || producto.descripcion}</p>
+      <p><strong>Precio:</strong> ${producto.precio?.toLocaleString()}</p>
       {producto.material && <p><strong>Material:</strong> {producto.material}</p>}
       {producto.medidas && <p><strong>Medidas:</strong> {producto.medidas}</p>}
       {producto.acabado && <p><strong>Acabado:</strong> {producto.acabado}</p>}
@@ -100,26 +99,33 @@ export default function ProductDetail() {
 
       <button className="btn-primary" onClick={() => handleAddToCart(producto)}>🛒 Añadir al Carrito</button>
 
-      {/* 3. Nuevos elementos JSX para el borrado y confirmación */}
-      <div className="admin-actions">
-        {!isDeleting ? (
-          // Botón principal de Eliminar
-          <button className="btn-danger" onClick={() => setIsDeleting(true)}>
-            Eliminar Producto (Admin)
-          </button>
-        ) : (
-          // Diálogo de confirmación
-          <div className="confirmation-dialog">
-            <p>¿Estás seguro de que quieres eliminar este producto?</p>
-            <button className="btn-danger" onClick={handleConfirmDelete}>
-              Sí, eliminar
+      {/* SECCIÓN ADMIN: Visible solo si es admin */}
+      {user && user.role === 'admin' && (
+          <div className="admin-actions">
+            <button 
+                className="btn-secondary" 
+                style={{marginBottom: '10px', width: '100%', borderColor: '#A0522D', color: '#A0522D'}}
+                onClick={() => navigate(`/admin/editar-producto/${id}`)}
+            >
+                ✏️ Editar Producto
             </button>
-            <button className="btn-secondary" onClick={() => setIsDeleting(false)}>
-              Cancelar
-            </button>
+            {!isDeleting ? (
+              <button className="btn-danger" onClick={() => setIsDeleting(true)}>
+                Eliminar Producto (Admin)
+              </button>
+            ) : (
+              <div className="confirmation-dialog">
+                <p>¿Estás seguro de que quieres eliminar este producto?</p>
+                <button className="btn-danger" onClick={handleConfirmDelete}>
+                  Sí, eliminar
+                </button>
+                <button className="btn-secondary" onClick={() => setIsDeleting(false)}>
+                  Cancelar
+                </button>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+      )}
     </main>
   );
 }

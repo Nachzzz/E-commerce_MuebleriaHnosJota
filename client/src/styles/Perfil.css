@@ -1,0 +1,149 @@
+.perfil-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: var(--font-sans);
+    color: #333;
+    min-height: 60vh;
+}
+
+.perfil-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.perfil-title {
+    font-family: var(--font-serif);
+    color: var(--brand-siena-tostado);
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.perfil-subtitle {
+    color: var(--brand-color-texto-gris);
+    font-size: 1.1rem;
+}
+
+.perfil-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: 1px solid rgba(160, 82, 45, 0.1);
+}
+
+/* Sidebar izquierda con avatar */
+.perfil-sidebar {
+    background-color: var(--brand-alabastro-calido);
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-right: 1px solid rgba(160, 82, 45, 0.1);
+}
+
+.avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    background-color: var(--brand-siena-tostado);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    font-family: var(--font-serif);
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(160, 82, 45, 0.3);
+}
+
+.user-role-badge {
+    background-color: var(--brand-verde-salvia);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+/* Contenido derecha */
+.perfil-content {
+    padding: 40px;
+}
+
+.info-group {
+    margin-bottom: 25px;
+}
+
+.info-group label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--brand-color-texto-gris);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 500;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.btn-logout {
+    margin-top: 20px;
+    background-color: transparent;
+    border: 1px solid #d9534f;
+    color: #d9534f;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    width: 100%;
+}
+
+.btn-logout:hover {
+    background-color: #d9534f;
+    color: white;
+}
+
+/* Sección de Pedidos (Placeholder) */
+.orders-section {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px dashed #ddd;
+}
+
+.orders-section h3 {
+    font-family: var(--font-serif);
+    color: var(--brand-siena-tostado);
+    margin-bottom: 15px;
+}
+
+.empty-orders {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    color: #777;
+    font-style: italic;
+}
+
+@media (max-width: 700px) {
+    .perfil-grid {
+        grid-template-columns: 1fr;
+    }
+    .perfil-sidebar {
+        border-right: none;
+        border-bottom: 1px solid rgba(160, 82, 45, 0.1);
+    }
+}
