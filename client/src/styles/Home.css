@@ -195,6 +195,11 @@ body {
     min-width: 180px;
 }
 
+.footer-content .enlaces a{
+    text-decoration: none;
+    color: var(--brand-vara-de-oro);
+}
+
 .footer-bottom {
     width: 100%;
     border-top: 1px solid #D1D5DC;
@@ -230,7 +235,7 @@ body {
     }
 
     .valores-marca {
-        padding: 25% 5%;
+        padding: 0 5%;
     }
 
     .productos-destacados {

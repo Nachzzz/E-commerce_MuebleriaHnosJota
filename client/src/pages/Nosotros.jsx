@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import '../styles/Nosotros.css';
+import '../styles/HeroBanner.css'
 
 // Variable de entorno para el despliegue
 // Lee la variable VITE_API_URL de Vercel/Vite. Usa localhost como fallback.
