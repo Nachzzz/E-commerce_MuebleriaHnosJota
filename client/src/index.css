@@ -45,11 +45,9 @@ body {
 h1 {
     font-family: var(--font-serif);
     color: black;
-    font-size: 52px;
+    font-size: 30px;
     font-style: normal;
-    /* Esto es lo correcto */
     font-weight: 400;
-    /* Opcional: peso regular */
 }
 
 h2 {
@@ -88,4 +86,5 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+  
 }
