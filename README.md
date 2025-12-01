@@ -135,13 +135,32 @@ La API conectada a MongoDB expone los siguientes endpoints:
 - DELETE /api/productos/:id
   - Elimina un producto por su _id.
   - Devuelve un msj de confirmación.
+- POST /api/productos/:id/reviews
+  - Crea una nueva reseña
+- GET /api/productos/:id/reviews
+  - Obtener reseñas de un producto
+- POST /api/usuarios/registro
+  - Registra un nuevo usuario
+- POST /api/usuarios/logins
+  - Loguea un usuario
+- GET /api/orders/mis-pedidos
+  - Obtener las órdenes del usuario logueado
+  - Privado
+---
+
+## Credenciales
+
+Para iniciar sesión como admin y poder crear productos desde el endpoint `/admin/crear-producto`, debe ingresar estas credenciales.
+
+Correo electrónico: admin@hermanosjota.com
+
+Contraseña: admin123
 
 ---
 
 ## Créditos
 Proyecto creado por el Grupo 4.
-- Camila Selene Varela
-- Suarez Gatica Agustina
+
 - Salto Jorge Ignacio
 
 ---
