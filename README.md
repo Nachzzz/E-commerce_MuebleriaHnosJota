@@ -34,11 +34,11 @@ Raíz (extracto):
   index.js
   .env.example
   seeder.js
-  /routes/productos.js
-  /models/producto_model.js
+  /controllers/
+  /middlewares/
+  /routes/
+  /models/
   /data/
-    productos.json
-    db.js
 /client/
   package.json
   /src/
