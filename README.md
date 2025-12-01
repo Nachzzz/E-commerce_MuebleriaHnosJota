@@ -32,13 +32,13 @@ Raíz (extracto):
 /backend/
   package.json
   index.js
-  .env.example (Deberás crear tu .env)
-  seeder.js       (Script para poblar la DB)
+  .env.example
+  seeder.js
   /routes/productos.js
   /models/producto_model.js
   /data/
-    productos.json  (Datos para el seeder)
-    db.js           (Lógica de conexión a Mongoose)
+    productos.json
+    db.js
 /client/
   package.json
   /src/
