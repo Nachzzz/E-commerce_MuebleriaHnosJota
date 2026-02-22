@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const strConnection = process.env.DB_URL || 'mongodb+srv://nachosalto17_db_user:m2uLen0OjnQW6h6Z@cluster0.uavtnig.mongodb.net/';
+const strConnection = process.env.DB_URL || 'mongodb+srv://nachosalto17_db_user:3QV8muQa0gF8V0XY@cluster0.uavtnig.mongodb.net/';
 
 exports.connectDB = async () => {
     if (!strConnection) {
