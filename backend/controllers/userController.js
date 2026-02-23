@@ -64,11 +64,54 @@ exports.loginUser = async (req, res) => {
                 id: user._id,
                 username: user.username,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                avatar: user.avatar
             },
         });
 
     } catch (error) {
         res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
+/**
+ * @desc    Sube o actualiza la foto de perfil del usuario
+ * @route   PUT /api/usuarios/avatar
+ */
+exports.uploadAvatar = async (req, res) => {
+    try {
+        // req.file lo genera Multer cuando termina de subir la imagen a Cloudinary
+        if (!req.file) {
+            return res.status(400).json({ message: 'No se proporcionó ninguna imagen.' });
+        }
+
+        // Esta es la URL pública que Cloudinary nos devuelve
+        const imageUrl = req.file.path;
+
+        // Buscamos al usuario por su ID (que viene del token de autenticación) y lo actualizamos
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user.id, // Tu middleware auth seguramente guarda los datos del token en req.user
+            { avatar: imageUrl },
+            { new: true } // Para que devuelva el documento actualizado y no el viejo
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'Usuario no encontrado.' });
+        }
+
+        res.status(200).json({
+            message: 'Avatar actualizado exitosamente',
+            avatar: updatedUser.avatar,
+            user: {
+                id: updatedUser._id,
+                username: updatedUser.username,
+                email: updatedUser.email,
+                role: updatedUser.role,
+                avatar: updatedUser.avatar
+            }
+        });
+    } catch (error) {
+        console.error('Error en uploadAvatar:', error);
+        res.status(500).json({ message: 'Error interno del servidor al subir avatar.' });
     }
 };

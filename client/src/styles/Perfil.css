@@ -147,3 +147,63 @@
         border-bottom: 1px solid rgba(160, 82, 45, 0.1);
     }
 }
+
+/* --- ESTILOS MEJORADOS DEL AVATAR --- */
+
+.avatar-placeholder {
+    /* Mantenemos tu tamaño circular */
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    background-color: #f0f0f0; /* Color de fondo si no hay imagen */
+    /* Asegúrate de tener aquí el width, height y border-radius: 50% de tus estilos originales */
+}
+
+.avatar-initial {
+    position: relative;
+    z-index: 1;
+    /* La letra debe estar visible por encima del fondo */
+}
+
+/* La capa oscura y borrosa que aparece arriba */
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4); /* Negro semitransparente */
+    backdrop-filter: blur(3px); /* El efecto de blur al fondo */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0; /* Oculto por defecto */
+    transition: opacity 0.3s ease; /* Animación suave */
+    z-index: 2;
+}
+
+/* Al pasar el mouse, mostramos la capa */
+.avatar-placeholder:hover .avatar-overlay {
+    opacity: 1;
+}
+
+/* Indicador de carga cuando la foto se está subiendo */
+.avatar-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 500;
+    z-index: 3; /* Siempre arriba de todo */
+}

@@ -8,6 +8,11 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         enum: ['client', 'admin'], 
         default: 'client' 
+    },
+    // NUEVO CAMPO PARA LA FOTO
+    avatar: { 
+        type: String, 
+        default: "" 
     }
 }, {timestamps: true});
 
