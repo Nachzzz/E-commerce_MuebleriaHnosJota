@@ -4,6 +4,7 @@ const path = require('path');
 const productosRouter = require('./routes/productos');
 const userRoutes = require('./routes/userRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 const { connectDB } = require('./data/db.js');
@@ -41,6 +42,8 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+app.use('/api/admin', adminRoutes);
 
 app.use('/api/productos', productosRouter);
 

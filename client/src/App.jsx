@@ -18,6 +18,7 @@ import './App.css'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import Checkout from './pages/Checkout'
 import Perfil from './pages/Perfil.jsx'
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route element={<ProtectedRoute requiredRole="admin" />}>
                 <Route path="/admin/crear-producto" element={<CrearProducto />} />
                 <Route path="/admin/editar-producto/:id" element={<CrearProducto />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
             </Route>
 
             <Route path="*" element={<Home />} />

@@ -194,6 +194,8 @@ const CrearProducto = () => {
             {isEditing ? 'Actualizar Producto' : 'Guardar Producto'}
         </button>
 
+        <button onClick={() => window.history.back()} style={{ marginBottom: '20px', padding: '10px 20px', backgroundColor: '#A0522D', color: '#fff', border: 'none', borderRadius: '5px', cursor: 'pointer', fontSize: '16px' }}>Regresar</button>
+
         {success && <p style={{ color: 'green', fontWeight:'bold' }}>{success}</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>

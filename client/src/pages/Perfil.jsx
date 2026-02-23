@@ -113,10 +113,10 @@ const Perfil = () => {
                 {/* Sidebar Izquierda */}
                 <aside className="perfil-sidebar">
                     {/* Contenedor del Avatar */}
-                    <div 
-                        className="avatar-placeholder" 
-                        onClick={() => fileInputRef.current.click()} 
-                        style={{ 
+                    <div
+                        className="avatar-placeholder"
+                        onClick={() => fileInputRef.current.click()}
+                        style={{
                             backgroundImage: user?.avatar ? `url(${user.avatar})` : 'none',
                         }}
                         title="Cambiar foto de perfil"
@@ -170,35 +170,50 @@ const Perfil = () => {
                         <div className="info-value">{user.email}</div>
                     </div>
 
-                    {/* --- NUEVA SECCIÓN DE ADMINISTRADOR --- */}
+                    {/* --- SECCIÓN EXCLUSIVA PARA ADMINISTRADORES --- */}
                     {user?.role === 'admin' && (
-                        <div className="admin-section" style={{
-                            marginTop: '20px',
-                            marginBottom: '20px',
+                        <div className="admin-actions-panel" style={{
+                            margin: '20px 0',
                             padding: '20px',
+                            backgroundColor: '#fdfbf9',
                             border: '1px solid #e0e0e0',
-                            borderRadius: '8px',
-                            backgroundColor: '#fdfbf9'
+                            borderRadius: '12px'
                         }}>
-                            <h3 style={{ marginBottom: '10px', color: '#333' }}>🛠️ Panel de Administración</h3>
-                            <p style={{ marginBottom: '15px', color: '#666', fontSize: '0.95rem' }}>
-                                Tienes permisos de administrador. Puedes gestionar el catálogo de productos de la tienda.
+                            <h3 style={{ color: '#333', marginBottom: '10px' }}>📊 Gestión del Negocio</h3>
+                            <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '15px' }}>
+                                Accede al panel de estadísticas para supervisar ventas e ingresos.
                             </p>
-                            <Link
-                                to="/admin/crear-producto"
-                                style={{
-                                    display: 'inline-block',
-                                    padding: '10px 20px',
-                                    backgroundColor: '#A0522D', /* Color marrón de tu paleta */
-                                    color: 'white',
-                                    textDecoration: 'none',
-                                    borderRadius: '5px',
-                                    fontWeight: '500',
-                                    transition: 'background-color 0.3s'
-                                }}
-                            >
-                                Crear Nuevo Producto
-                            </Link>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <button
+                                    onClick={() => navigate('/admin/dashboard')}
+                                    className="Button"
+                                    style={{
+                                        backgroundColor: '#A0522D',
+                                        color: 'white',
+                                        padding: '10px 20px',
+                                        borderRadius: '6px',
+                                        fontWeight: 'bold',
+                                        border: 'none',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Ir al Dashboard
+                                </button>
+                                <button
+                                    onClick={() => navigate('/admin/crear-producto')}
+                                    className="Button"
+                                    style={{
+                                        backgroundColor: '#555',
+                                        color: 'white',
+                                        padding: '10px 20px',
+                                        borderRadius: '6px',
+                                        border: 'none',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Gestionar Productos
+                                </button>
+                            </div>
                         </div>
                     )}
 
