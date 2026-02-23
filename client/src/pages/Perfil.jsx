@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import '../styles/Perfil.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 const Perfil = () => {
-    const { user, logout, isLoggedIn } = useAuthContext();
+    const { user, token, login, logout, isLoggedIn } = useAuthContext();
     const navigate = useNavigate();
-    
+
     // Estados para el historial
     const [orders, setOrders] = useState([]);
     const [loadingOrders, setLoadingOrders] = useState(true);
+    // --- ESTADOS PARA LA FOTO DE PERFIL ---
+    const [uploadingAvatar, setUploadingAvatar] = useState(false);
+    const fileInputRef = useRef(null); // Referencia para simular el clic en el input de archivo
 
     // Redirigir si no hay sesión
     useEffect(() => {
@@ -58,6 +61,47 @@ const Perfil = () => {
 
     const initial = user.username ? user.username.charAt(0).toUpperCase() : "U";
 
+    // --- FUNCIÓN PARA SUBIR EL AVATAR ---
+    const handleAvatarChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setUploadingAvatar(true);
+
+        // FormData permite enviar archivos e información en la misma petición
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const res = await fetch(`${API_URL}/api/usuarios/avatar`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}` // Usamos el token del contexto
+                    // IMPORTANTE: Al usar FormData, NO se debe setear el 'Content-Type'. 
+                    // El navegador lo hace automáticamente incluyendo el "boundary" necesario.
+                },
+                body: formData
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+
+                // data.user trae el usuario con la nueva URL de Cloudinary
+                // Reutilizamos la función login() para actualizar el localStorage y el Contexto
+                login(token, data.user);
+                alert("¡Foto de perfil actualizada exitosamente!");
+            } else {
+                const errorData = await res.json();
+                alert(`Error al actualizar la foto: ${errorData.message}`);
+            }
+        } catch (error) {
+            console.error("Error subiendo avatar:", error);
+            alert("Ocurrió un error inesperado al subir la imagen.");
+        } finally {
+            setUploadingAvatar(false);
+        }
+    };
+
     return (
         <main className="perfil-container">
             <div className="perfil-header">
@@ -68,9 +112,46 @@ const Perfil = () => {
             <div className="perfil-grid">
                 {/* Sidebar Izquierda */}
                 <aside className="perfil-sidebar">
-                    <div className="avatar-placeholder">
-                        {initial}
+                    {/* Contenedor del Avatar */}
+                    <div 
+                        className="avatar-placeholder" 
+                        onClick={() => fileInputRef.current.click()} 
+                        style={{ 
+                            backgroundImage: user?.avatar ? `url(${user.avatar})` : 'none',
+                        }}
+                        title="Cambiar foto de perfil"
+                    >
+                        {/* Si no hay foto, mostramos la inicial */}
+                        {!user?.avatar && !uploadingAvatar && (
+                            <span className="avatar-initial">{initial}</span>
+                        )}
+
+                        {/* Capa de Hover (Overlay) con Blur y Lápiz */}
+                        <div className="avatar-overlay">
+                            {/* Ícono de lápiz SVG puro */}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                            </svg>
+                        </div>
+
+                        {/* Indicador de carga visual */}
+                        {uploadingAvatar && (
+                            <div className="avatar-loading">
+                                <span className="loader-text">Subiendo...</span>
+                            </div>
+                        )}
                     </div>
+
+                    {/* Input de tipo file oculto */}
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleAvatarChange}
+                        accept="image/png, image/jpeg, image/jpg, image/webp"
+                        style={{ display: 'none' }}
+                    />
+
                     <h2>{user.username}</h2>
                     <span className="user-role-badge">
                         {user.role === 'admin' ? 'Administrador' : 'Cliente'}
@@ -89,16 +170,48 @@ const Perfil = () => {
                         <div className="info-value">{user.email}</div>
                     </div>
 
+                    {/* --- NUEVA SECCIÓN DE ADMINISTRADOR --- */}
+                    {user?.role === 'admin' && (
+                        <div className="admin-section" style={{
+                            marginTop: '20px',
+                            marginBottom: '20px',
+                            padding: '20px',
+                            border: '1px solid #e0e0e0',
+                            borderRadius: '8px',
+                            backgroundColor: '#fdfbf9'
+                        }}>
+                            <h3 style={{ marginBottom: '10px', color: '#333' }}>🛠️ Panel de Administración</h3>
+                            <p style={{ marginBottom: '15px', color: '#666', fontSize: '0.95rem' }}>
+                                Tienes permisos de administrador. Puedes gestionar el catálogo de productos de la tienda.
+                            </p>
+                            <Link
+                                to="/admin/crear-producto"
+                                style={{
+                                    display: 'inline-block',
+                                    padding: '10px 20px',
+                                    backgroundColor: '#A0522D', /* Color marrón de tu paleta */
+                                    color: 'white',
+                                    textDecoration: 'none',
+                                    borderRadius: '5px',
+                                    fontWeight: '500',
+                                    transition: 'background-color 0.3s'
+                                }}
+                            >
+                                Crear Nuevo Producto
+                            </Link>
+                        </div>
+                    )}
+
                     <div className="orders-section">
                         <h3>Historial de Pedidos</h3>
-                        
+
                         {loadingOrders ? (
                             <p>Cargando historial...</p>
                         ) : orders.length === 0 ? (
                             <div className="empty-orders">
                                 <p>No tienes pedidos recientes.</p>
-                                <button 
-                                    style={{marginTop: '10px', fontSize: '0.9rem'}} 
+                                <button
+                                    style={{ marginTop: '10px', fontSize: '0.9rem' }}
                                     onClick={() => navigate('/productos')}
                                 >
                                     Ir al catálogo
@@ -109,19 +222,19 @@ const Perfil = () => {
                             <div className="orders-list">
                                 {orders.map(order => (
                                     <div key={order._id} style={{
-                                        border: '1px solid #eee', 
-                                        borderRadius: '8px', 
-                                        padding: '15px', 
+                                        border: '1px solid #eee',
+                                        borderRadius: '8px',
+                                        padding: '15px',
                                         marginBottom: '15px',
                                         background: '#fafafa'
                                     }}>
-                                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
-                                            <span style={{fontWeight: 'bold', color: '#A0522D'}}>Orden #{order._id.slice(-6)}</span>
-                                            <span style={{color: '#666', fontSize: '0.9rem'}}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                                            <span style={{ fontWeight: 'bold', color: '#A0522D' }}>Orden #{order._id.slice(-6)}</span>
+                                            <span style={{ color: '#666', fontSize: '0.9rem' }}>
                                                 {new Date(order.createdAt).toLocaleDateString()}
                                             </span>
                                         </div>
-                                        <div style={{fontSize: '0.95rem', color: '#444'}}>
+                                        <div style={{ fontSize: '0.95rem', color: '#444' }}>
                                             <p><strong>Total:</strong> ${order.totalAmount.toLocaleString()}</p>
                                             <p><strong>Estado:</strong> {order.status === 'paid' ? 'Pagado' : order.status}</p>
                                             <p><strong>Ítems:</strong> {order.items.length}</p>
